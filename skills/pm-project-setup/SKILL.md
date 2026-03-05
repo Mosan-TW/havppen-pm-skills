@@ -42,9 +42,12 @@ Key databases:
 Ask the user for (or extract from their description):
 1. **Story name** — what is this feature called?
 2. **Epic** — which Epic does this belong to? (search or ask)
-3. **Module** (`模組🖍️`) — which module/category?
+3. **Module** (`模組🖍️`) — which module/category? (set on Tasks only, not on Story)
 4. **Flow type** — 完整流程 or 簡易流程？（功能較大、需要 PRD 規劃選完整；小功能或緊急修復選簡易）
 5. **Tasks** — what are the initial tasks for the first phase?
+6. **優先級** — 低 / 中 / 高
+7. **負責人** — who is responsible? (used for Story 負責人1🖍️ and all 階段時程 負責人們🖍️)
+8. **是否執行** — 正常執行 / 因故暫停 / 因故取消（通常填正常執行）
 
 Phases are pre-filled based on flow type — no need to ask unless the user wants to customize.
 
@@ -55,12 +58,17 @@ If the user has already described the feature, extract as much as possible and c
 Create a new page in the Stories database with:
 - Title: story name
 - Link to Epic
-- Link to Module
 - Description (if provided)
+- `優先級🖍️` — 低 / 中 / 高
+- `負責人1🖍️` — assignee (people property)
+- `是否執行🖍️` — 正常執行 / 因故暫停 / 因故取消
+
+Note: Stories database does NOT have a `模組🖍️` property. Module is set on Tasks only.
 
 **Step 3: Create 階段時程**
 
 For each phase, create an entry in 階段時程 linked to the Story.
+Also set `負責人們🖍️` (people property) on each phase entry.
 
 **Step 4: Create Tasks**
 
