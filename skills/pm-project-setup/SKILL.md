@@ -14,6 +14,27 @@ Key databases:
 - Tasks: `collection://2d9268e7-4af8-8003-8d86-000b45718394`
 - Modules: `collection://2e8268e7-4af8-803d-bb1b-000bbc327576`
 
+## Phase Types
+
+**完整流程**（大型功能，需 PRD + Spec）：
+1. 前期規劃 — PRD 規劃階段
+2. 後期規劃 — Spec 規劃階段
+3. 開發
+4. 人工測試 — 請 QA 進行測試
+5. 更版 — 每週更版，QA 驗收
+
+**簡易流程**（小型功能，規劃寫在 Story）：
+1. 開發 — 規劃直接寫在 Story，排開發時間
+2. 更版 — 每週更版，QA 驗收
+
+## Valid values for 所屬階段🖍️
+
+與階段時程對應，另加：
+- 前期規劃 / 後期規劃 / 開發 / 人工測試 / 更版
+- 驗收
+- 緊急修復
+- 緊急更版
+
 ## Your task
 
 **Step 1: Gather information**
@@ -22,8 +43,10 @@ Ask the user for (or extract from their description):
 1. **Story name** — what is this feature called?
 2. **Epic** — which Epic does this belong to? (search or ask)
 3. **Module** (`模組🖍️`) — which module/category?
-4. **Phases** (`階段時程`) — what are the development phases? (e.g., 前期規劃, 開發, 人工測試, 更版)
+4. **Flow type** — 完整流程 or 簡易流程？（功能較大、需要 PRD 規劃選完整；小功能或緊急修復選簡易）
 5. **Tasks** — what are the initial tasks for the first phase?
+
+Phases are pre-filled based on flow type — no need to ask unless the user wants to customize.
 
 If the user has already described the feature, extract as much as possible and confirm before creating.
 
