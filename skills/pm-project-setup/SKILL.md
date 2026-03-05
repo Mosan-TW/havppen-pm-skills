@@ -90,3 +90,16 @@ Show a summary of what was created and confirm with the user.
 - Prefer creating a few well-defined tasks over many vague ones
 - If unsure about Epic, search Notion first before asking
 - Task names should be action-oriented: "實作 API endpoint", "設計資料庫 schema", not "API"
+
+
+---
+
+## Maintenance
+
+This skill is managed in the `havppen-pm-skills` repo (`~/Projects/Havppen/havppen-pm-skills`).
+After editing `~/.claude/skills/pm-project-setup/SKILL.md`, sync back:
+
+```bash
+cp ~/.claude/skills/pm-project-setup/SKILL.md ~/Projects/Havppen/havppen-pm-skills/skills/pm-project-setup/SKILL.md
+cd ~/Projects/Havppen/havppen-pm-skills && git add skills/pm-project-setup/SKILL.md && git commit -m "..." && git push
+```

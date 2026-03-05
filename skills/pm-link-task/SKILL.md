@@ -42,3 +42,16 @@ Show the updated Task with its new Story link.
 ## For bulk linking
 
 If the user has multiple orphaned tasks, process them one by one or group them by module for efficiency. Ask: "有多個 Task 需要處理嗎？我可以一起幫你整理。"
+
+
+---
+
+## Maintenance
+
+This skill is managed in the `havppen-pm-skills` repo (`~/Projects/Havppen/havppen-pm-skills`).
+After editing `~/.claude/skills/pm-link-task/SKILL.md`, sync back:
+
+```bash
+cp ~/.claude/skills/pm-link-task/SKILL.md ~/Projects/Havppen/havppen-pm-skills/skills/pm-link-task/SKILL.md
+cd ~/Projects/Havppen/havppen-pm-skills && git add skills/pm-link-task/SKILL.md && git commit -m "..." && git push
+```

@@ -57,3 +57,16 @@ Show the Bug page URL and Task URL (if created).
 | P0 | System down, data loss, security issue — fix immediately |
 | P1 | Core feature broken, affects many users — fix this sprint |
 | P2 | Minor issue, workaround exists — schedule normally |
+
+
+---
+
+## Maintenance
+
+This skill is managed in the `havppen-pm-skills` repo (`~/Projects/Havppen/havppen-pm-skills`).
+After editing `~/.claude/skills/pm-bug/SKILL.md`, sync back:
+
+```bash
+cp ~/.claude/skills/pm-bug/SKILL.md ~/Projects/Havppen/havppen-pm-skills/skills/pm-bug/SKILL.md
+cd ~/Projects/Havppen/havppen-pm-skills && git add skills/pm-bug/SKILL.md && git commit -m "..." && git push
+```

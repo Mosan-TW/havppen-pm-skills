@@ -110,3 +110,16 @@ Then ask: "這個草稿準確嗎？有需要調整的地方嗎？"
 - Tasks and HPC features are currently independent systems; do not try to cross-reference
 - Keep task names as-is from Notion — don't paraphrase or summarize
 - If `完成日期🖍️` is not filled in (user doesn't consistently log it), use `建立時間` or `狀態` change heuristics to guess 昨日完成
+
+
+---
+
+## Maintenance
+
+This skill is managed in the `havppen-pm-skills` repo (`~/Projects/Havppen/havppen-pm-skills`).
+After editing `~/.claude/skills/pm-daily/SKILL.md`, sync back:
+
+```bash
+cp ~/.claude/skills/pm-daily/SKILL.md ~/Projects/Havppen/havppen-pm-skills/skills/pm-daily/SKILL.md
+cd ~/Projects/Havppen/havppen-pm-skills && git add skills/pm-daily/SKILL.md && git commit -m "..." && git push
+```

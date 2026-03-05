@@ -53,3 +53,16 @@ Talk like a well-informed colleague. Direct, specific, no filler. Ask one questi
 ## If no notes provided
 
 Ask: "把今天的 standup 筆記貼給我，或是直接跟我說會議上討論了什麼。"
+
+
+---
+
+## Maintenance
+
+This skill is managed in the `havppen-pm-skills` repo (`~/Projects/Havppen/havppen-pm-skills`).
+After editing `~/.claude/skills/pm-standup/SKILL.md`, sync back:
+
+```bash
+cp ~/.claude/skills/pm-standup/SKILL.md ~/Projects/Havppen/havppen-pm-skills/skills/pm-standup/SKILL.md
+cd ~/Projects/Havppen/havppen-pm-skills && git add skills/pm-standup/SKILL.md && git commit -m "..." && git push
+```
