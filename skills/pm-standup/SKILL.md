@@ -6,14 +6,17 @@ allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notio
 
 ## Context
 
-Fetch current sprint tasks assigned to the current user:
-- Tasks DB: `collection://2d9268e7-4af8-8003-8d86-000b45718394`
-- Filter: `相對 Sprint = 當期` AND `執行者們🖍️` includes current user
-- Fields to retrieve: `名稱🖍️`, `狀態🖍️`, `所屬階段🖍️`, `模組🖍️`, `Story🖍️`, `優先級🖍️`, `完成日期🖍️`
+**Wayne's Sprint Dashboard** (pre-filtered view): `https://www.notion.so/31b268e74af881f18eb4f48c7d4f4adb`
 
-Sprint is weekly. `相對 Sprint = 當期` = this week's sprint.
+Fetch this page first — it contains a linked database filtered to:
+- `執行者們🖍️` = Wayne Huang (`user://e0aef6a9-3930-4c00-ac50-a7340ef57b19`)
+- `相對 Sprint` = 當期
 
-To identify the current user, call `mcp__plugin_Notion_notion__notion-get-users` and match against context (e.g. the user's name or email if mentioned).
+Sprint is weekly. Skip calling `notion-get-users` — Wayne's user ID is already known.
+
+Fields to retrieve: `名稱🖍️`, `狀態🖍️`, `所屬階段🖍️`, `模組🖍️`, `Story🖍️`, `優先級🖍️`, `完成日期🖍️`
+
+To get actual task data, do `notion-search` with `data_source_url: collection://2d9268e7-4af8-8003-8d86-000b45718394` and `filters.created_by_user_ids: ["e0aef6a9-3930-4c00-ac50-a7340ef57b19"]`, or search by relevant keywords in the sprint context.
 
 ## Your task
 
