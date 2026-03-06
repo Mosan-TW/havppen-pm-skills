@@ -1,29 +1,57 @@
 # Havppen PM Skills
 
-Claude Code skills for Havppen's PM workflow — daily reports, standup coaching, project setup, bug tracking, and retrospectives. Built on top of Notion.
+給 Havppen 團隊用的 Claude Code Skills，涵蓋 PM、開發者、QA 的日常工作流程，整合 Notion 與 Sentry。
 
-## Skills
+## Skills 一覽
 
-| Skill | Description |
-|-------|-------------|
-| `/pm-daily` | Generate daily Slack standup report from Notion tasks |
-| `/pm-standup` | Standup coach — analyze meeting notes against task states, recommend today's focus |
-| `/pm-project-setup` | After planning: create Story → 階段時程 → Tasks in Notion |
-| `/pm-bug` | Report a bug and create tracking tasks |
-| `/pm-sentry` | Create a Bug + investigation Task directly from a Sentry issue URL |
-| `/pm-task-create` | Quick Task creation from conversation context |
-| `/pm-link-task` | Find the right Story for a Task and link them |
-| `/pm-retrospective` | Sprint retrospective — review completed/incomplete tasks, identify patterns, suggest improvements |
-| `/pm-qa` | QA 測試設計引導 — 從功能描述產生單點行為 + 完整使用者流程測試場景，輸出 Gherkin 格式 |
+### PM 日常
 
-## Requirements
+| Skill | 說明 | 觸發方式 |
+|-------|------|---------|
+| `/pm-standup` | Standup 教練 — 分析會議筆記，推薦今天的 focus | 貼 standup 筆記 |
+| `/pm-daily` | 產生每日 Slack 進度報表 | 「幫我寫今天的 Slack 報表」 |
+| `/pm-retrospective` | Sprint 回顧 — 盤點完成/未完成、識別模式、產出改善建議 | 「上週做了什麼 / sprint 回顧」 |
 
-- [Claude Code](https://claude.ai/code) installed
-- [Notion MCP plugin](https://claude.ai/code/plugins) enabled in Claude Code
-- [Sentry MCP plugin](https://claude.ai/code/plugins) enabled (for `/pm-sentry`)
-- Access to Havppen's Notion workspace
+### 專案管理
 
-## Installation
+| Skill | 說明 | 觸發方式 |
+|-------|------|---------|
+| `/pm-project-setup` | 規劃完後建立 Story → 階段時程 → Tasks | 「規劃完了，幫我建 Notion 卡」 |
+| `/pm-task-create` | 從對話快速開 Task，不需要完整 Story | 「幫我開一張 task / 開卡」 |
+| `/pm-link-task` | 找到對應的 Story 並連結 Task | 「這個 task 要掛在哪個 story」 |
+
+### Bug 追蹤
+
+| Skill | 說明 | 觸發方式 |
+|-------|------|---------|
+| `/pm-bug` | 回報 Bug，建立追蹤 Task | 「有個 bug 要記錄」 |
+| `/pm-sentry` | 從 Sentry Issue URL 自動建 Bug + 調查 Task | 貼 sentry.io 連結 |
+
+### 測試
+
+| Skill | 說明 | 使用對象 |
+|-------|------|---------|
+| `/pm-qa` | 從功能描述產生測試場景（單點行為 + 完整使用者流程），輸出 Gherkin 格式 | QA |
+
+### 維護
+
+| Skill | 說明 |
+|-------|------|
+| `/pm-update` | 同步最新 skills（從此 repo pull + 安裝）|
+
+---
+
+## 安裝
+
+### 前置需求
+
+- [Claude Code](https://claude.ai/code) 已安裝
+- Claude Code 已啟用以下 MCP 插件：
+  - **Notion MCP**（所有 pm-* skills 必須）
+  - **Sentry MCP**（`/pm-sentry` 需要）
+- 已加入 Havppen 的 Notion workspace
+
+### 安裝步驟
 
 ```bash
 git clone https://github.com/Mosan-TW/havppen-pm-skills.git ~/Projects/Havppen/havppen-pm-skills
@@ -32,9 +60,9 @@ chmod +x install.sh
 ./install.sh
 ```
 
-Then **restart Claude Code**.
+安裝完成後，**重啟 Claude Code** 即可使用。
 
-## Update
+### 更新
 
 ```bash
 cd ~/Projects/Havppen/havppen-pm-skills
@@ -42,32 +70,17 @@ git pull
 ./install.sh
 ```
 
-Or use the built-in skill: `/pm-update`
+或在 Claude Code 對話中輸入 `/pm-update`。
 
-## Usage
+---
 
-After installation, use the skills in any Claude Code session:
+## 使用方式
 
-```
-/pm-daily
-/pm-standup
-/pm-project-setup
-/pm-bug
-/pm-sentry
-/pm-task-create
-/pm-link-task
-/pm-retrospective
-```
+安裝後，在任意 Claude Code 對話中直接輸入指令，或用自然語言觸發：
 
-You can also trigger them naturally:
-
-| Natural language | Skill |
-|-----------------|-------|
-| "幫我寫今天的 Slack 報表" | `/pm-daily` |
-| "貼 standup 筆記 ..." | `/pm-standup` |
-| "規劃完了，幫我建 Notion 卡" | `/pm-project-setup` |
-| "有個 bug 要記錄" | `/pm-bug` |
-| "幫我把這個 Sentry 錯誤開成 bug" | `/pm-sentry` |
-| "幫我開一張 task" | `/pm-task-create` |
-| "這個 task 要掛在哪個 story" | `/pm-link-task` |
-| "上週做了什麼 / sprint 回顧" | `/pm-retrospective` |
+- 「把 standup 筆記貼給我看看」→ `/pm-standup`
+- 「這個功能要怎麼測？」→ `/pm-qa`
+- 「幫我把這個 Sentry 錯誤開成 bug」→ `/pm-sentry`
+- 「上週做了什麼？」→ `/pm-retrospective`
+- 「幫我開一張 task」→ `/pm-task-create`
+- 「規劃完了，幫我建 Notion 卡」→ `/pm-project-setup`
