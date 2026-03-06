@@ -14,6 +14,7 @@ Claude Code skills for Havppen's PM workflow — daily reports, standup coaching
 | `/pm-task-create` | Quick Task creation from conversation context |
 | `/pm-link-task` | Find the right Story for a Task and link them |
 | `/pm-retrospective` | Sprint retrospective — review completed/incomplete tasks, identify patterns, suggest improvements |
+| `/pm-qa` | QA 測試設計引導 — 從功能描述產生單點行為 + 完整使用者流程測試場景，輸出 Gherkin 格式 |
 
 ## Requirements
 
