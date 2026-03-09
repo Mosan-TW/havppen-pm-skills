@@ -28,6 +28,8 @@ Ask the user for (or extract from their description):
 3. **Module** — which part of the system? (search modules if unsure)
 4. **Affected customers** — specific customers impacted? (optional)
 5. **Fix type** — 緊急修復 (hotfix, urgent) or 完整修復 (full fix, planned)?
+6. **Assignee** — who will fix it? (search Notion users)
+7. **Sprint** — which sprint? (search Sprint DB `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`, default: current sprint)
 
 **Step 2: Create Bug entry**
 
@@ -67,6 +69,8 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 - `狀態🖍️` — 即將進行
 - `名稱🖍️` — `{prefix} {bug title}`
 - `依賴 Task🖍️` — previous Task in the pipeline (except the first Task)
+- `執行者們🖍️` — assignee (from Step 1)
+- `Sprint🖍️` — sprint (from Step 1)
 
 **Creation order:** Create Tasks sequentially (1 → 2 → 3 → ...) so each Task's URL is available to set as the next Task's `依賴 Task🖍️`.
 
