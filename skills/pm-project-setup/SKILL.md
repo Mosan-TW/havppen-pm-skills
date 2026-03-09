@@ -52,7 +52,7 @@ Extract as much as possible from the user's description, apply sensible defaults
 ### 1c. Apply defaults
 - **流程類型** → 簡易流程（unless the feature clearly needs PRD/Spec）
 - **優先級** → 中
-- **負責人** → Wayne（user ID: `e0aef6a9-3930-4c00-ac50-a7340ef57b19`）
+- **負責人** → 無預設，必須詢問。用 Notion user search 取得可選人員列表，以編號選項呈現
 - **是否執行** → 正常執行
 
 ### 1d. Present confirmation form
@@ -67,7 +67,7 @@ Show a table with all values pre-filled, then ask the user to confirm or modify 
 | 模組 | <best match from search> |
 | 流程 | 簡易流程 |
 | 優先級 | 中 |
-| 負責人 | Wayne |
+| 負責人 | ⚠️ 請選擇 |
 | 是否執行 | 正常執行 |
 
 Tasks（所屬階段：開發）:
