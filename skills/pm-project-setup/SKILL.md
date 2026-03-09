@@ -4,6 +4,29 @@ description: "Set up a new project in Notion after planning: create Story, 階�
 allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-create-pages, mcp__plugin_Notion_notion__notion-update-page, mcp__plugin_Notion_notion__notion-update-data-source, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page, AskUserQuestion
 ---
 
+## Known Team Members
+
+| 名稱 | Notion User ID |
+|------|----------------|
+| wayne | `e0aef6a9-3930-4c00-ac50-a7340ef57b19` |
+
+When the user's arguments contain a known name (case-insensitive), use it as the default 負責人 and 執行者.
+If the name is not in this table, search Notion users via `notion-search` with `query_type: "user"` to resolve.
+
+## Arguments
+
+The skill accepts optional arguments in the format:
+```
+/pm-project-setup [name] <feature description>
+```
+
+- If the first word matches a known team member name, use it as the default assignee
+- Everything else is the feature description
+- Examples:
+  - `/pm-project-setup wayne 刪除兌換券：跳提醒` → 負責人=Wayne
+  - `/pm-project-setup emily 新增報表功能` → search "emily" in Notion users
+  - `/pm-project-setup 刪除兌換券` → no default assignee, ask user to select
+
 ## Notion Structure
 
 Hierarchy: **Epic → Story → (階段時程 + Tasks)**
@@ -52,7 +75,7 @@ Extract as much as possible from the user's description, apply sensible defaults
 ### 1c. Apply defaults
 - **流程類型** → 簡易流程（unless the feature clearly needs PRD/Spec）
 - **優先級** → 中
-- **負責人** → 無預設，必須詢問。用 Notion user search 取得可選人員列表，以編號選項呈現
+- **負責人** → 如果 arguments 中有指定人名，從 Known Team Members 表或 Notion user search 解析；否則詢問，以編號選項呈現
 - **是否執行** → 正常執行
 
 ### 1d. Present confirmation form
@@ -67,7 +90,7 @@ Show a table with all values pre-filled, then ask the user to confirm or modify 
 | 模組 | <best match from search> |
 | 流程 | 簡易流程 |
 | 優先級 | 中 |
-| 負責人 | ⚠️ 請選擇 |
+| 負責人 | <從 arguments 解析 or ⚠️ 請選擇> |
 | 是否執行 | 正常執行 |
 
 Tasks（所屬階段：開發）:
