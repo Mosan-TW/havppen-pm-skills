@@ -22,14 +22,18 @@ Bug DB fields:
 
 **Step 1: Gather bug information**
 
-Ask the user for (or extract from their description):
+The user may report one or multiple bugs at once. For each bug, gather (or extract from their description):
 1. **Bug title** — concise description of the issue
 2. **Priority** — P0 (system down/critical), P1 (major feature broken), P2 (minor issue)
 3. **Module** — which part of the system? (search modules if unsure)
-4. **Affected customers** — specific customers impacted? (optional)
-5. **Fix type** — 緊急修復 (hotfix, urgent) or 完整修復 (full fix, planned)?
+4. **Affected customers** — specific customers impacted? (optional, search in Customers DB `collection://2e8268e7-4af8-800f-a65c-000be39698a3`, create if not found)
+5. **Fix type** — 緊急修復 or 完整修復 (default by priority, see below)
 6. **Assignee** — who will fix it? (search Notion users)
-7. **Sprint** — which sprint? (search Sprint DB `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`, default: current sprint)
+7. **Sprint** — which sprint? (search Sprint DB `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`)
+
+**Finding the current Sprint:** Search Sprint DB, pick the one with the most recent date that is ≤ today. Sprint titles follow the format `Sprint N (YYYY-MM-DD)`.
+
+**Batch mode:** When the user reports multiple bugs, present a summary table for all bugs at once for the user to confirm/adjust, rather than asking one-by-one. Gather shared info (assignee, sprint, fix type) once and apply to all unless the user specifies differently per bug.
 
 **Step 2: Create Bug entry**
 
@@ -57,7 +61,7 @@ Create a new page in the Bug database with gathered information.
 
 **Step 3: Create fix Task pipeline**
 
-Ask: "要同時建立修復 Task 嗎？" and confirm fix type (緊急修復 or 完整修復).
+Default: always create the Task pipeline unless the user explicitly says not to. Determine fix type automatically by priority (P0/P1 → 緊急修復, P2 → 完整修復). For P1, mention the default and let the user override if needed.
 
 Based on fix type, create a **pipeline of Tasks** with sequential dependencies (each Task's `依賴 Task🖍️` points to the previous one):
 
