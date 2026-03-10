@@ -35,6 +35,26 @@ Ask the user for (or extract from their description):
 
 Create a new page in the Bug database with gathered information.
 
+**Bug page content format** (use this template for the page content):
+
+```
+## 問題描述
+
+{根據使用者描述填寫}
+
+## 關鍵識別資料
+
+> 例如：會員帳號、訂單號碼、問題發生時間、頁面網址、使用瀏覽器版本 等
+
+{如有受影響客戶或其他識別資料，列在此處}
+
+## 問題重現步驟
+
+> 建議用數字條列式搭配畫面截圖以說明步驟。
+
+1.
+```
+
 **Step 3: Create fix Task pipeline**
 
 Ask: "要同時建立修復 Task 嗎？" and confirm fix type (緊急修復 or 完整修復).
