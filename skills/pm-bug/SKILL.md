@@ -98,7 +98,8 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 
 **`Git Branch🖍️` 規則（更版類 Task 專用）：**
 - `[更版]` 和 `[緊急更版]` Task 必須填入 `Git Branch🖍️`
-- 值為修復該 bug 的 branch 名稱（例如 `main`、`fix/social-login`）
+- 值為修復該 bug 的 feature branch 名稱（例如 `fix/social-login`、`hotfix/payment-timeout`）
+- **避免使用 `main`**：修復應在獨立 branch 進行，再 merge 進 main，而非直接在 main 上開發
 - 其他 Task（開發、人工測試、驗收 等）不需要填
 
 **Creation order:** Create Tasks sequentially (1 → 2 → 3 → ...) so each Task's URL is available to set as the next Task's `依賴 Task🖍️`.
