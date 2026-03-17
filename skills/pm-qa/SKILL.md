@@ -51,6 +51,18 @@ allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notio
 
 ## Step 3：輸出 Gherkin
 
+### 語言規範：寫給 QA，不是工程師
+
+Gherkin 步驟必須用**使用者看得懂的語言**，避免技術用語：
+
+| 不好（技術用語） | 好（使用者視角） |
+|------------------|------------------|
+| 完成 Google OAuth 授權 | 在 Google 頁面選擇帳號並點擊「允許」 |
+| API 回傳 200 | 頁面顯示成功訊息 |
+| token 過期 | 錯誤訊息顯示「…已過期」 |
+| Redis cache 寫入 | （內部行為，不需要寫） |
+| redirect 到指定 URL | 跳轉至正確頁面 |
+
 每個場景輸出格式：
 
 ```gherkin
