@@ -102,6 +102,12 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 - **避免使用 `main`**：修復應在獨立 branch 進行，再 merge 進 main，而非直接在 main 上開發
 - 其他 Task（開發、人工測試、驗收 等）不需要填
 
+**⚠️ Fix Branch 必須從 master（前端）或 main（後端）切出：**
+- 絕對不能從 `develop` 或 `release` 切出 fix/hotfix branch
+- 從錯誤 branch 切出會把未完成的功能帶進 production
+- 正確做法：`git checkout master && git pull && git checkout -b fix/<name>`
+- 記得提醒開發者：修完後 merge 進 master，再從 master cherry-pick 或 merge 回 develop
+
 **Creation order:** Create Tasks sequentially (1 → 2 → 3 → ...) so each Task's URL is available to set as the next Task's `依賴 Task🖍️`.
 
 **Step 4: Confirm and show links**
