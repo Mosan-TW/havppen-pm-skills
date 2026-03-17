@@ -96,6 +96,11 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 - `執行者們🖍️` — assignee (from Step 1)
 - `Sprint🖍️` — sprint (from Step 1)
 
+**`Git Branch🖍️` 規則（更版類 Task 專用）：**
+- `[更版]` 和 `[緊急更版]` Task 必須填入 `Git Branch🖍️`
+- 值為修復該 bug 的 branch 名稱（例如 `main`、`fix/social-login`）
+- 其他 Task（開發、人工測試、驗收 等）不需要填
+
 **Creation order:** Create Tasks sequentially (1 → 2 → 3 → ...) so each Task's URL is available to set as the next Task's `依賴 Task🖍️`.
 
 **Step 4: Confirm and show links**
