@@ -115,6 +115,11 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 - 正確做法：`git checkout master && git pull && git checkout -b fix/<name>`
 - 記得提醒開發者：修完後 merge 進 master，再從 master cherry-pick 或 merge 回 develop
 
+**⚠️ 驗收測試原則：**
+- 驗收測試一律在**測試環境**用**測試帳號**執行
+- 受影響客戶（`主要客戶們🖍️`）僅用於了解問題背景與重現條件，不做為測試對象
+- 撰寫測試案例時不要提及客戶帳號，改寫為「在測試環境重現相同設定」
+
 **Creation order:** Create Tasks sequentially (1 → 2 → 3 → ...) so each Task's URL is available to set as the next Task's `依賴 Task🖍️`.
 
 **Step 4: Confirm and show links**
