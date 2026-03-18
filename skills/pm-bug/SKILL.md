@@ -102,6 +102,13 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 - **避免使用 `main`**：修復應在獨立 branch 進行，再 merge 進 main，而非直接在 main 上開發
 - 其他 Task（開發、人工測試、驗收 等）不需要填
 
+**Git Branch 自動查找流程（不需詢問用戶）：**
+1. 同時執行 `git branch -r --sort=-committerdate | head -30` 查詢 `newscms` 和 `havppen-api-v1` 的遠端 branches
+2. 根據 bug 描述的關鍵字，比對 `fix/` 或 `hotfix/` 開頭的 branch，找最相關者
+3. 如果找到匹配 → 直接填入，在最終摘要中說明找到的 branch
+4. 如果找不到 → 自行命名 `fix/<kebab-case-bug-summary>`（例如 `fix/activity-auto-offline`）並填入
+5. **全程不詢問用戶**，直接處理
+
 **⚠️ Fix Branch 必須從 master（前端）或 main（後端）切出：**
 - 絕對不能從 `develop` 或 `release` 切出 fix/hotfix branch
 - 從錯誤 branch 切出會把未完成的功能帶進 production
