@@ -69,7 +69,61 @@ Create a new page in the Bug database with gathered information.
 1.
 ```
 
-**Step 3: Create fix Task pipeline**
+**Step 3: Generate test scenarios**
+
+Before creating Tasks, draft test scenarios for the bug fix. These will be embedded directly into the 人工測試 and 驗收 Task bodies.
+
+**For every bug, generate at minimum:**
+
+1. **Regression scenario** — 驗證 bug 已修復（最重要）
+2. **Boundary scenario** — 邊界值、剛好符合 / 剛好不符合的情況
+3. **Side-effect scenario** — 修復後相關功能沒有壞掉（smoke test）
+
+**Language rules（同 pm-qa）：**
+- 用使用者視角，不用技術用語
+- 不提客戶帳號，改為「在測試環境建立相同設定」
+
+**Output format for 人工測試 Task body:**
+
+```
+## 自測步驟
+
+{step-by-step 重現原 bug 的步驟，確認已修復}
+
+1. 進入 {頁面}
+2. 執行 {操作}
+3. 預期：{應看到什麼}（原本是：{原本錯誤行為}）
+
+## 測試案例
+
+{Gherkin scenarios}
+```
+
+**Output format for 驗收 / 緊急修復 Task body:**
+
+```
+## 驗收測試案例
+
+{Gherkin scenarios，以使用者視角描述}
+```
+
+**Gherkin template：**
+
+```gherkin
+Scenario: {場景標題（修復驗證）}
+  Given {前置條件}
+  When {操作}
+  Then {預期結果（已修復的行為）}
+
+Scenario: {相關功能 smoke test}
+  Given {前置條件}
+  When {操作}
+  Then {應正常運作}
+```
+
+---
+
+**Step 3b: Create fix Task pipeline**
 
 Default: always create the Task pipeline unless the user explicitly says not to. Determine fix type automatically by priority (P0/P1 → 緊急修復, P2 → 完整修復). For P1, mention the default and let the user override if needed.
 
