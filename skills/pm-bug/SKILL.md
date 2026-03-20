@@ -33,37 +33,17 @@ The user may report one or multiple bugs at once. For each bug, extract from the
 
 **Interactive selection UX (IMPORTANT):**
 
-When you need the user to choose from a list, always format it as numbered options. The user can reply with a number or multiple numbers (e.g. `1`, `3`, `1 3`):
+Use the `AskUserQuestion` tool when you need the user to make a choice. Key rules:
+- Up to 4 questions at once, 2–4 options each (automatically adds "Other" for custom input)
+- Use `multiSelect: true` when choices are not mutually exclusive
+- Put the most likely answer first with "(Recommended)" in the label
 
-```
-**[欄位名稱]（回覆數字選擇）：**
-`1` Option A
-`2` Option B
-`3` Option C
-```
+Apply `AskUserQuestion` for:
+- **Assignee** — fetch workspace users (`notion-get-users`), present as options (max 4; if more than 4 people, pick the most likely candidates or use "Other")
+- **Priority** — when ambiguous, ask with P0/P1/P2 as options with descriptions
+- **Fix type** — when priority is P1, ask 緊急修復 vs 完整修復
 
-Apply this pattern for:
-- **Assignee** — always present numbered list of workspace members
-- **Priority** — present as `1` P0 / `2` P1 / `3` P2 with one-line descriptions when ambiguous
-- **Fix type** — present as `1` 緊急修復 / `2` 完整修復 when priority is P1
-
-**Batch mode:** When the user reports multiple bugs, auto-fill all fields you can infer, then present a **confirmation table** with one question at the end (e.g. assignee selection). Apply the same assignee/sprint to all bugs unless the user specifies otherwise.
-
-Example confirmation block:
-
-```
-| # | Bug | 等級 | 模組 | 修復類型 |
-|---|-----|------|------|---------|
-| 1 | … | P2 | 會員限期 | 完整修復 |
-| 2 | … | P2 | 兌換券 | 完整修復 |
-
-**執行者（回覆數字，可填 1 個套用全部）：**
-`1` Allison Chiu
-`2` Enning Yu
-`3` Vince Guo
-`4` Wayne Huang
-`5` 楊 以宏
-```
+**Batch mode:** When the user reports multiple bugs, auto-fill all fields you can infer, then show a plain summary table in text, followed by ONE `AskUserQuestion` call for the remaining unknown(s) (e.g., assignee). Apply the same answer to all bugs unless the user specifies otherwise via "Other".
 
 **Step 2: Create Bug entry**
 
