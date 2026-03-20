@@ -132,9 +132,46 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 
 **Creation order:** Create Tasks sequentially (1 → 2 → 3 → ...) so each Task's URL is available to set as the next Task's `依賴 Task🖍️`.
 
-**Step 4: Confirm and show links**
+**Step 4: Create worktree and meta.yaml**
 
-Show the Bug page URL and all Task URLs in a summary table.
+After creating all Tasks:
+
+1. **Derive slug** from the git branch name (e.g. `fix/membership-plan-min-price-zero` → `fix-membership-plan-min-price-zero`)
+
+2. **Create worktree** in newscms (frontend fix) or havppen-api-v1 (backend fix) or both:
+   ```bash
+   # Frontend
+   cd ~/Projects/Havppen/havppen/newscms
+   git checkout master && git pull
+   git worktree add ../worktrees/<slug> -b fix/<slug>
+
+   # Backend
+   cd ~/Projects/Havppen/havppen/havppen-api-v1
+   git checkout main && git pull
+   git worktree add ../worktrees/<slug> -b fix/<slug>
+   ```
+   Worktree path convention: `~/Projects/Havppen/havppen/worktrees/<slug>`
+
+3. **Record worktree path in the 開發/緊急修復 Task body** — append a section:
+   ```
+   ## Worktree
+   ~/Projects/Havppen/havppen/worktrees/<slug>
+   ```
+
+4. **Create `fixes/<slug>/meta.yaml`** in havppen-spec:
+   ```yaml
+   notion:
+     bug: <bug-page-url>
+     tasks:
+       修復: <fix-task-url>      # 緊急修復 or 開發
+       驗收: <uat-task-url>
+       更版: <release-task-url>
+   worktree: ~/Projects/Havppen/havppen/worktrees/<slug>
+   ```
+
+**Step 5: Confirm and show links**
+
+Show the Bug page URL, all Task URLs, and worktree path in a summary table.
 
 ## Priority guide
 
