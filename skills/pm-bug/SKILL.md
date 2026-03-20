@@ -22,18 +22,48 @@ Bug DB fields:
 
 **Step 1: Gather bug information**
 
-The user may report one or multiple bugs at once. For each bug, gather (or extract from their description):
+The user may report one or multiple bugs at once. For each bug, extract from their description:
 1. **Bug title** — concise description of the issue
-2. **Priority** — P0 (system down/critical), P1 (major feature broken), P2 (minor issue)
-3. **Module** — which part of the system? (search modules if unsure)
-4. **Affected customers** — specific customers impacted? (optional, search in Customers DB `collection://2e8268e7-4af8-800f-a65c-000be39698a3`, create if not found)
-5. **Fix type** — 緊急修復 or 完整修復 (default by priority, see below)
-6. **Assignee** — who will fix it? (search Notion users)
-7. **Sprint** — which sprint? (search Sprint DB `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`)
+2. **Priority** — P0/P1/P2 (infer from description; ask if unclear)
+3. **Module** — search Modules DB to find the best match
+4. **Affected customers** — optional, search Customers DB `collection://2e8268e7-4af8-800f-a65c-000be39698a3`
+5. **Fix type** — auto-derive from priority (see below)
+6. **Assignee** — fetch Notion users and ask
+7. **Sprint** — search Sprint DB `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`, pick the most recent date ≤ today
 
-**Finding the current Sprint:** Search Sprint DB, pick the one with the most recent date that is ≤ today. Sprint titles follow the format `Sprint N (YYYY-MM-DD)`.
+**Interactive selection UX (IMPORTANT):**
 
-**Batch mode:** When the user reports multiple bugs, present a summary table for all bugs at once for the user to confirm/adjust, rather than asking one-by-one. Gather shared info (assignee, sprint, fix type) once and apply to all unless the user specifies differently per bug.
+When you need the user to choose from a list, always format it as numbered options. The user can reply with a number or multiple numbers (e.g. `1`, `3`, `1 3`):
+
+```
+**[欄位名稱]（回覆數字選擇）：**
+`1` Option A
+`2` Option B
+`3` Option C
+```
+
+Apply this pattern for:
+- **Assignee** — always present numbered list of workspace members
+- **Priority** — present as `1` P0 / `2` P1 / `3` P2 with one-line descriptions when ambiguous
+- **Fix type** — present as `1` 緊急修復 / `2` 完整修復 when priority is P1
+
+**Batch mode:** When the user reports multiple bugs, auto-fill all fields you can infer, then present a **confirmation table** with one question at the end (e.g. assignee selection). Apply the same assignee/sprint to all bugs unless the user specifies otherwise.
+
+Example confirmation block:
+
+```
+| # | Bug | 等級 | 模組 | 修復類型 |
+|---|-----|------|------|---------|
+| 1 | … | P2 | 會員限期 | 完整修復 |
+| 2 | … | P2 | 兌換券 | 完整修復 |
+
+**執行者（回覆數字，可填 1 個套用全部）：**
+`1` Allison Chiu
+`2` Enning Yu
+`3` Vince Guo
+`4` Wayne Huang
+`5` 楊 以宏
+```
 
 **Step 2: Create Bug entry**
 
