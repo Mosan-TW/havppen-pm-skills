@@ -42,6 +42,7 @@ Apply `AskUserQuestion` for:
 - **Assignee** — fetch workspace users (`notion-get-users`), present as options (max 4; if more than 4 people, pick the most likely candidates or use "Other")
 - **Priority** — when ambiguous, ask with P0/P1/P2 as options with descriptions
 - **Fix type** — when priority is P1, ask 緊急修復 vs 完整修復
+- **Sprint** — always show the selected sprint name (e.g. "2026 W12") as "(Recommended)" option with "Other" fallback; never silently auto-select
 
 **Batch mode:** When the user reports multiple bugs, auto-fill all fields you can infer, then show a plain summary table in text, followed by ONE `AskUserQuestion` call for the remaining unknown(s) (e.g., assignee). Apply the same answer to all bugs unless the user specifies otherwise via "Other".
 
