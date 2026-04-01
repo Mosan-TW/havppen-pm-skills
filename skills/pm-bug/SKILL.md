@@ -198,6 +198,13 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 
 **Creation order:** Create Tasks sequentially (1 → 2 → 3 → ...) so each Task's URL is available to set as the next Task's `依賴 Task🖍️`.
 
+**⚠️ Field validation after creation:** After all Tasks are created, verify each Task has these relations actually set (not silently skipped):
+- `Bug🖍️` — linked to the Bug page
+- `執行者們🖍️` — assignee
+- `Sprint🖍️` — sprint
+
+If any relation failed silently during creation (Notion API may reject relation values without raising an obvious error), use `notion-update-page` to retry. **Important:** Always pass the full Notion URL format (`https://www.notion.so/<id>`) for relation properties — raw UUIDs cause `"is not a valid URL"` validation errors.
+
 **Step 4: Create worktree and meta.yaml**
 
 After creating all Tasks:
