@@ -62,6 +62,16 @@ Gherkin 步驟必須用**使用者看得懂的語言**，避免技術用語：
 | token 過期 | 錯誤訊息顯示「…已過期」 |
 | Redis cache 寫入 | （內部行為，不需要寫） |
 | redirect 到指定 URL | 跳轉至正確頁面 |
+| table | 表格 |
+| 分頁控制項 / pagination | 分頁切換 |
+| modal / dialog | 視窗、彈窗 |
+| button | 按鈕 |
+| checkbox | 勾選框 |
+| dropdown | 下拉選單 |
+| tab | 頁籤 |
+| loading | 載入中 |
+| toast / notification | 提示訊息 |
+| input / field | 欄位、輸入框 |
 
 每個場景輸出格式：
 

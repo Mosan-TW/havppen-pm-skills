@@ -83,6 +83,17 @@ Before creating Tasks, draft test scenarios for the bug fix. These will be embed
 **Language rules（同 pm-qa）：**
 - 用使用者視角，不用技術用語
 - 不提客戶帳號，改為「在測試環境建立相同設定」
+- 用口語化的繁體中文描述 UI 元素，避免英文或技術術語，例如：
+  - table → 表格
+  - 分頁控制項 / pagination → 分頁切換
+  - modal / dialog → 視窗、彈窗
+  - button → 按鈕
+  - checkbox → 勾選框
+  - dropdown → 下拉選單
+  - tab → 頁籤
+  - loading → 載入中
+  - toast / notification → 提示訊息
+  - input / field → 欄位、輸入框
 
 **Output format for 人工測試 Task body:**
 
