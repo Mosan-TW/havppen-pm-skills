@@ -198,8 +198,9 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 
 **Creation order:** Create Tasks sequentially (1 → 2 → 3 → ...) so each Task's URL is available to set as the next Task's `依賴 Task🖍️`.
 
-**⚠️ Field validation after creation:** After all Tasks are created, verify each Task has these relations actually set (not silently skipped):
+**⚠️ Field validation after creation:** After all Tasks are created, verify each Task has these fields actually set (not silently skipped):
 - `Bug🖍️` — linked to the Bug page
+- `模組🖍️` — module
 - `執行者們🖍️` — assignee
 - `Sprint🖍️` — sprint
 
