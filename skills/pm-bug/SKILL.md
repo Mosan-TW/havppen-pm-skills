@@ -1,14 +1,23 @@
 ---
 name: pm-bug
 description: "Create a bug report in Notion and optionally create fix Tasks. Use this when the user says /pm-bug, '回報 bug', '建立 bug 追蹤', '有個問題要記錄', or describes a bug that needs tracking."
-allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-create-pages, mcp__plugin_Notion_notion__notion-update-page, mcp__plugin_Notion_notion__notion-search, mcp__plugin_Notion_notion__notion-update-data-source
+model: sonnet
+allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-create-pages, mcp__plugin_Notion_notion__notion-update-page, mcp__plugin_Notion_notion__notion-search, mcp__plugin_Notion_notion__notion-update-data-source, Bash
 ---
+
+> **Notion MCP Fallback**: MCP 回 500 時，讀 `shared/notion-api-fallback.md` 切換到 Bash + REST API。
 
 ## Notion Structure
 
-- Bug DB: `collection://2e8268e7-4af8-80a5-ad02-000b7bce538d`
-- Tasks DB: `collection://2d9268e7-4af8-8003-8d86-000b45718394`
-- Modules: `collection://2e8268e7-4af8-803d-bb1b-000bbc327576`
+⚠️ REST API 一律用【倉庫】ID；`collection://` 是 view，REST 會 404。
+
+| DB | MCP collection:// | REST Database ID（倉庫） |
+|----|-------------------|-------------------------|
+| Bug | `collection://2e8268e7-4af8-80a5-ad02-000b7bce538d` | `2e8268e74af880a5ad02000b7bce538d` |
+| Tasks | — | `2d9268e74af88074ae62ddfa3090f7a1` |
+| Modules | `collection://2e8268e7-4af8-803d-bb1b-000bbc327576` | `2e8268e74af8803dbb1b000bbc327576` |
+
+完整對照：`shared/notion-api-fallback.md`。
 
 Bug DB fields:
 - `名稱🖍️` — bug title
@@ -19,6 +28,37 @@ Bug DB fields:
 - `Tasks` — linked fix tasks
 
 ## Your task
+
+**Step 0: Bug Intake Query Obligation（開卡前必查 lessons pool + 歷史 fixes）**
+
+收到 bug 描述後，**必須先查歷史，再開卡**。
+
+1. **歸類 domain**：判斷 bug 屬於哪個 domain（voucher / activity / appointment / 其他）或工程 topic（frontend / workflow）
+2. **Grep lessons pools**：
+   ```bash
+   # 先查對應 domain（若存在）
+   grep -i "<關鍵字>" architecture/domain-models/<domain>/lessons.md
+   # 查工程 topic pool（frontend、workflow 等）
+   grep -rli "<關鍵字>" architecture/lessons/*.md
+   # 若 bug 跨 domain 或 domain 不明，grep 全部 domain pool
+   grep -rli "<關鍵字>" architecture/domain-models/*/lessons.md
+   ```
+3. **Grep `fixes/*/context.md`** 找近期相似 fix：
+   ```bash
+   grep -rli "<關鍵字>" fixes/*/context.md
+   ```
+
+**命中既有案例**：
+- 告知使用者找到的來源路徑（例如 `architecture/domain-models/voucher/lessons.md#symptom-xxx`、`architecture/lessons/frontend.md` 或 `fixes/<slug>/context.md`）
+- 在 Step 2 建立 Bug page 時、於 Notion Task 新增 `參考案例` 欄位（plain text），填入來源路徑
+- 若是完全一樣的 bug，先詢問使用者是否真要開新卡（可能是 regression 或仍未發版）
+
+**無命中**：
+- 繼續開卡流程
+- **提醒使用者**：在新 fix 完成後，`fixes/<slug>/context.md` 需補齊以下三段，否則 lessons pool 對下一個遇到同樣問題的人沒有價值：
+  - `## Symptom` — 可 grep 的症狀關鍵字（現象描述）
+  - `## 根本原因` — 為什麼會發生（邏輯錯誤、資料假設、edge case）
+  - `## 未來預防` — 下次怎麼避免（guard / test / review checklist 等）
 
 **Step 1: Gather bug information**
 
@@ -68,6 +108,12 @@ Create a new page in the Bug database with gathered information.
 > 建議用數字條列式搭配畫面截圖以說明步驟。
 
 1.
+
+## 根本原因
+
+> 修完後回填。說明為什麼會發生這個問題（code 邏輯錯誤、資料假設錯誤、edge case 未處理等）。
+
+（待修復後補充）
 ```
 
 **Step 3: Generate test scenarios**
@@ -95,29 +141,15 @@ Before creating Tasks, draft test scenarios for the bug fix. These will be embed
   - toast / notification → 提示訊息
   - input / field → 欄位、輸入框
 
-**Output format for 人工測試 Task body:**
+**Output format for 人工測試 / 驗收 / 緊急修復 Task body（三張卡內容完全相同）：**
 
 ```
-## 自測步驟
-
-{step-by-step 重現原 bug 的步驟，確認已修復}
-
-1. 進入 {頁面}
-2. 執行 {操作}
-3. 預期：{應看到什麼}（原本是：{原本錯誤行為}）
-
 ## 測試案例
 
-{Gherkin scenarios}
+{Gherkin scenarios，全部以使用者視角描述，禁 DB query / API path / 欄位 schema 等技術細節}
 ```
 
-**Output format for 驗收 / 緊急修復 Task body:**
-
-```
-## 驗收測試案例
-
-{Gherkin scenarios，以使用者視角描述}
-```
+⚠️ **人工測試卡與驗收卡 body 必須一模一樣**——兩張都由 QA 執行，內容應一致；都用 Gherkin + 非技術語言。不要在人工測試卡加「自測步驟」section、也不要把驗收卡寫成 checklist。
 
 **Gherkin template：**
 
