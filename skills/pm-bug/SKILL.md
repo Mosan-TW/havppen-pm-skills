@@ -55,10 +55,12 @@ Bug DB fields:
 
 **無命中**：
 - 繼續開卡流程
-- **提醒使用者**：在新 fix 完成後，`fixes/<slug>/context.md` 需補齊以下三段，否則 lessons pool 對下一個遇到同樣問題的人沒有價值：
+- **Fix 完成後（publish / archive 階段），Claude Code 必須自動產出並寫入 `fixes/<slug>/context.md`：**
   - `## Symptom` — 可 grep 的症狀關鍵字（現象描述）
-  - `## 根本原因` — 為什麼會發生（邏輯錯誤、資料假設、edge case）
-  - `## 未來預防` — 下次怎麼避免（guard / test / review checklist 等）
+  - `## 根本原因` — 從 diff / commit 推導出為什麼發生（邏輯錯誤、資料假設、edge case）
+  - `## 未來預防` — 對應建議（加 test / guard / type / review checklist 等）
+  - 同步更新 Notion Bug page 的「根本原因」section
+- 不需要使用者手動填寫
 
 **Step 1: Gather bug information**
 
@@ -111,9 +113,7 @@ Create a new page in the Bug database with gathered information.
 
 ## 根本原因
 
-> 修完後回填。說明為什麼會發生這個問題（code 邏輯錯誤、資料假設錯誤、edge case 未處理等）。
-
-（待修復後補充）
+（修復完成後由 Claude Code 根據 diff / commit 自動產出）
 ```
 
 **Step 3: Generate test scenarios**
