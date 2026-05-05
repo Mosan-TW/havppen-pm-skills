@@ -151,6 +151,24 @@ Before creating Tasks, draft test scenarios for the bug fix. These will be embed
 
 ⚠️ **人工測試卡與驗收卡 body 必須一模一樣**——兩張都由 QA 執行，內容應一致；都用 Gherkin + 非技術語言。不要在人工測試卡加「自測步驟」section、也不要把驗收卡寫成 checklist。
 
+**Notion block 結構：**
+- `heading_2`：「測試案例」
+- `code`（language: `gherkin`）：所有 Scenario 放在同一個 code block，支援語法 highlight
+
+**Notion API children 範本：**
+
+⚠️ **`language` 必須是 `"gherkin"`，絕對不能用 `"plain text"`**（曾在 fix-comment-module-still-visible 犯過，事後要手動補改）
+
+```json
+[
+  {"type":"heading_2","heading_2":{"rich_text":[{"text":{"content":"測試案例"}}]}},
+  {"type":"code","code":{
+    "language":"gherkin",
+    "rich_text":[{"text":{"content":"Scenario: {場景標題}\n  Given {前置條件}\n  When {操作}\n  Then {預期結果}\n\nScenario: {下一個場景}\n  Given {前置條件}\n  When {操作}\n  Then {預期結果}"}}]
+  }}
+]
+```
+
 **Gherkin template：**
 
 ```gherkin
