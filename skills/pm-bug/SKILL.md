@@ -43,9 +43,9 @@ Bug DB fields:
    # 若 bug 跨 domain 或 domain 不明，grep 全部 domain pool
    grep -rli "<關鍵字>" architecture/domain-models/*/lessons.md
    ```
-3. **Grep `fixes/*/context.md`** 找近期相似 fix：
+3. **Grep `fixes/**/context.md`** 找近期相似 fix（含已歸檔）：
    ```bash
-   grep -rli "<關鍵字>" fixes/*/context.md
+   grep -rli "<關鍵字>" fixes/*/context.md fixes/_archive/*/*/context.md
    ```
 
 **命中既有案例**：
@@ -159,14 +159,24 @@ Before creating Tasks, draft test scenarios for the bug fix. These will be embed
 
 ⚠️ **`language` 必須是 `"gherkin"`，絕對不能用 `"plain text"`**（曾在 fix-comment-module-still-visible 犯過，事後要手動補改）
 
-```json
-[
-  {"type":"heading_2","heading_2":{"rich_text":[{"text":{"content":"測試案例"}}]}},
-  {"type":"code","code":{
-    "language":"gherkin",
-    "rich_text":[{"text":{"content":"Scenario: {場景標題}\n  Given {前置條件}\n  When {操作}\n  Then {預期結果}\n\nScenario: {下一個場景}\n  Given {前置條件}\n  When {操作}\n  Then {預期結果}"}}]
-  }}
-]
+⚠️ **Gherkin 換行必須用 `$'...'` bash syntax，不能用雙引號字串**（曾在 add-calendar-button-timezone 犯過：`"...\n..."` 的 `\n` 是 literal backslash-n，Notion 收到後不換行）
+
+```bash
+# 正確：$'...' 語法，\n 會被 bash 解譯成真實換行
+GHERKIN=$'Scenario: ...\n  Given ...\n  When ...\n  Then ...'
+
+# 錯誤：雙引號字串，\n 是 literal
+GHERKIN="Scenario: ...\n  Given ..."  # ❌
+```
+
+產生 children payload 用 jq：
+```bash
+PAYLOAD=$(jq -n --arg g "$GHERKIN" '{
+  "children": [
+    {"type":"heading_2","heading_2":{"rich_text":[{"text":{"content":"測試案例"}}]}},
+    {"type":"code","code":{"language":"gherkin","rich_text":[{"text":{"content":$g}}]}}
+  ]
+}')
 ```
 
 **Gherkin template：**
@@ -186,6 +196,29 @@ Scenario: {相關功能 smoke test}
 ---
 
 **Step 3b: Create fix Task pipeline**
+
+**⚠️ 開卡前先查修復進度（避免重複建卡）**
+
+在建立任何 Task 前，執行以下檢查：
+
+1. `spectra list --json` — 有同名或高度相關的 active change？
+2. `ls fixes/<slug>/meta.yaml` — 已有 fix tracking？
+3. `git branch -r | grep fix/` — 對應 repo 已有 fix branch 或 PR？
+
+依狀態決定要建哪些卡：
+
+| 狀態 | 建立的 Tasks |
+|------|-------------|
+| 尚未開始（無 branch、無 change） | 全部 |
+| 修復進行中（有 branch / change，尚未開 PR） | 全部 |
+| PR 已開（fix branch 已 push + PR 存在） | 全部；開發/緊急修復卡狀態設為「已完成」 |
+| PR 已 merge | 全部；開發/緊急修復卡狀態設為「已完成」 |
+
+⚠️ **開發/緊急修復卡無論如何都要建**——就算修復已完成，仍須留下記錄，狀態設「已完成」。不可因為「做完了」就跳過不建卡。
+
+告知用戶偵測到的狀態，說明哪些卡已設為「已完成」及原因。
+
+---
 
 Default: always create the Task pipeline unless the user explicitly says not to. Determine fix type automatically by priority (P0/P1 → 緊急修復, P2 → 完整修復). For P1, mention the default and let the user override if needed.
 
@@ -222,17 +255,20 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 - `執行者們🖍️` — assignee (from Step 1)
 - `Sprint🖍️` — sprint (from Step 1)
 
-**`Git Branch🖍️` 規則（更版類 Task 專用）：**
-- `[更版]` 和 `[緊急更版]` Task 必須填入 `Git Branch🖍️`
-- 值為修復該 bug 的 feature branch 名稱（例如 `fix/social-login`、`hotfix/payment-timeout`）
+**`Git Branch / PR🖍️` 規則（更版類 Task 專用）：**
+- `[更版]` 和 `[緊急更版]` Task 必須填入 `Git Branch / PR🖍️`（注意：Notion Tasks DB 的正確欄位名稱是 `Git Branch / PR🖍️`，不是 `Git Branch🖍️`）
+- **值優先填正式站 PR 完整網址**（例如 `https://github.com/Mosan-TW/newscms/pull/726`）；若 PR 尚未開，填 branch name（例如 `fix/member-admin-email-not-saved`）
+- PR 開出後若欄位還是 branch name，應補改為 PR URL
 - **避免使用 `main`**：修復應在獨立 branch 進行，再 merge 進 main，而非直接在 main 上開發
 - 其他 Task（開發、人工測試、驗收 等）不需要填
 
-**Git Branch 自動查找流程（不需詢問用戶）：**
+**Git Branch / PR 自動查找流程（不需詢問用戶）：**
 1. 同時執行 `git branch -r --sort=-committerdate | head -30` 查詢 `newscms` 和 `havppen-api-v1` 的遠端 branches
 2. 根據 bug 描述的關鍵字，比對 `fix/` 或 `hotfix/` 開頭的 branch，找最相關者
-3. 如果找到匹配 → 直接填入，在最終摘要中說明找到的 branch
-4. 如果找不到 → 自行命名 `fix/<kebab-case-bug-summary>`（例如 `fix/activity-auto-offline`）並填入
+3. 如果找到匹配 branch → 用 `gh pr list --head <branch> --json url` 查看是否有對應 PR
+   - 有 PR → 填入 PR URL（例如 `https://github.com/Mosan-TW/newscms/pull/726`）
+   - 無 PR → 填 branch name，說明 PR 開出後請補改
+4. 如果找不到 branch → 自行命名 `fix/<kebab-case-bug-summary>`（例如 `fix/activity-auto-offline`）並填入
 5. **全程不詢問用戶**，直接處理
 
 **⚠️ Fix Branch 必須從 master（前端）或 main（後端）切出：**
