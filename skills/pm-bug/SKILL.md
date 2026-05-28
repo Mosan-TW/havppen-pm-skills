@@ -259,8 +259,22 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 - `[更版]` 和 `[緊急更版]` Task 必須填入 `Git Branch / PR🖍️`（注意：Notion Tasks DB 的正確欄位名稱是 `Git Branch / PR🖍️`，不是 `Git Branch🖍️`）
 - **值優先填正式站 PR 完整網址**（例如 `https://github.com/Mosan-TW/newscms/pull/726`）；若 PR 尚未開，填 branch name（例如 `fix/member-admin-email-not-saved`）
 - PR 開出後若欄位還是 branch name，應補改為 PR URL
+- **若有多個 PR（前端 + 後端），欄位填第一個 PR URL，其餘 PR 記錄在卡片內文**（見下方「PR 內文格式」）
 - **避免使用 `main`**：修復應在獨立 branch 進行，再 merge 進 main，而非直接在 main 上開發
 - 其他 Task（開發、人工測試、驗收 等）不需要填
+
+**更版卡 PR 內文格式（`[更版]` 和 `[緊急更版]` Task body 必加）：**
+
+```
+## 相關 PR
+
+- [newscms #726](https://github.com/Mosan-TW/newscms/pull/726) — 前端修復
+- [havppen-api-v1 #123](https://github.com/Mosan-TW/havppen-api-v1/pull/123) — 後端修復（若有）
+```
+
+- 每個 PR 一行，格式：`- [repo #號碼](URL) — 說明`
+- 只有一個 PR 時也要建此 section（方便日後補充）
+- 用 `gh pr list --head <branch>` 自動查，不需詢問用戶
 
 **Git Branch / PR 自動查找流程（不需詢問用戶）：**
 1. 同時執行 `git branch -r --sort=-committerdate | head -30` 查詢 `newscms` 和 `havppen-api-v1` 的遠端 branches
