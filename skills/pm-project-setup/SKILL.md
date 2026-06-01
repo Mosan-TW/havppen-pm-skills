@@ -1,8 +1,11 @@
 ---
 name: pm-project-setup
 description: "Set up a new project in Notion after planning: create Story, 階段時程 (phase schedule), and Tasks. Use this when the user says /pm-project-setup, '建立專案', '開新 story', '規劃完了要建卡', or has finished planning a feature and wants to create the Notion structure."
-allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-create-pages, mcp__plugin_Notion_notion__notion-update-page, mcp__plugin_Notion_notion__notion-update-data-source, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page, AskUserQuestion
+model: sonnet
+allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-create-pages, mcp__plugin_Notion_notion__notion-update-page, mcp__plugin_Notion_notion__notion-update-data-source, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page, AskUserQuestion, Bash
 ---
+
+> **Notion MCP Fallback**: MCP 回 500 時，讀 `shared/notion-api-fallback.md` 切換到 Bash + REST API。
 
 ## Known Team Members
 
@@ -31,11 +34,19 @@ The skill accepts optional arguments in the format:
 
 Hierarchy: **Epic → Story → (階段時程 + Tasks)**
 
-Key databases:
-- Stories: `collection://2d9268e7-4af8-8166-8238-000bd8445fdb`
-- 階段時程: `collection://2dc268e7-4af8-809cab97-f0a57e991f00`
-- Tasks: `collection://2d9268e7-4af8-8003-8d86-000b45718394`
-- Modules: `collection://2e8268e7-4af8-803d-bb1b-000bbc327576`
+Key databases（REST DB id；不要用 `collection://` view UUID，REST 會回 404）：
+
+| DB | REST Database ID |
+|----|-----------------|
+| Stories | `2d9268e74af88105a52ff323aed1cfcb` |
+| Epics | `2d9268e74af880d69225ee4bc7269453` |
+| Tasks | `2d9268e74af88074ae62ddfa3090f7a1` |
+| 階段時程 | `2dc268e74af8809cab97f0a57e991f00` |
+| Modules | `2e8268e74af8803dbb1b000bbc327576` |
+
+> ⚠️ 看到 `collection://...` 形式的 ID 一律當 view，**不可餵給 REST API**。若需 search/query 找正確 DB id，從既有 page 反查 `parent.database_id`。
+
+完整對照表：`shared/notion-api-fallback.md`。若 REST 呼叫 404，先檢查是否誤用舊 view ID。
 
 ## Phase Types
 
@@ -77,6 +88,17 @@ Extract as much as possible from the user's description, apply sensible defaults
 - **優先級** → 中
 - **負責人** → 如果 arguments 中有指定人名，從 Known Team Members 表或 Notion user search 解析；否則詢問，以編號選項呈現
 - **是否執行** → 正常執行
+
+### 1c-2. Mandatory phase gate（STOP if missing）
+
+在進入 1d 之前，**強制檢查 auto-extracted Tasks 是否涵蓋所有必建階段**：
+
+- 簡易流程：**開發 / 人工測試 / 更版 / 驗收** 四張，缺一不可
+- 完整流程：**前期規劃 / 後期規劃 / 開發 / 人工測試 / 更版 / 驗收** 六張，缺一不可
+
+缺少任何階段 → 自動補齊（名稱：`[<階段>] <Story name>`），不詢問用戶。補完後在 1d 確認表格用 ✨ 標記自動補的 task，讓用戶知道補了什麼。
+
+> 教訓：第 2 次發生「Story 建好但沒驗收 task」。Step 4 規則已列必建，但 Step 1d 確認時沒擋住 → 自動補齊才是硬閘門。
 
 ### 1d. Present confirmation form
 
@@ -123,9 +145,11 @@ Create a new page in the Stories database with:
 
 Note: Stories database does NOT have a `模組🖍️` property. Module is set on Tasks only.
 
-**Step 3: Create 階段時程**
+**Step 3: Create 階段時程**（條件執行）
 
-For each phase, create an entry in 階段時程 linked to the Story.
+> ⚠️ **補建 Story 情境跳過此步驟**：若功能已處於 `uat` / `pending_release` / `release` 狀態（即補建 Story，非新功能規劃），**直接跳到 Step 4**，不建立 階段時程。各開發階段已過，補建只製造雜訊。
+
+一般新功能（`backlog` / `planning` / `dev`）才執行：For each phase, create an entry in 階段時程 linked to the Story.
 Also set `負責人們🖍️` (people property) on each phase entry.
 
 **Step 4: Create Tasks**
@@ -138,6 +162,13 @@ For each task, create an entry in Tasks with:
 - `狀態🖍️` — 即將進行
 - `執行者們🖍️` — assignee (ask if not specified)
 - `Sprint🖍️` — current sprint (ask if needed)
+
+⚠️ **必建 Task 清單（缺一不可）：**
+- 完整流程：前期規劃 / 後期規劃 / 開發 / 人工測試 / 更版 / **驗收**
+- 簡易流程：開發 / 人工測試 / 更版 / **驗收**
+- 驗收 Task 依賴（`依賴 Task🖍️`）= 更版 Task；不得省略
+
+⚠️ **人工測試 Task 與驗收 Task 的 body 必須一模一樣**——兩張都由 QA 執行，內容應一致；都用 **Gherkin 格式 + 非技術語言**（畫面看到什麼、按了什麼按鈕、出現什麼提示），禁 DB query / API path / schema 等技術細節。兩張卡都不能留空。
 
 **Step 5: Summary**
 
