@@ -145,12 +145,9 @@ Create a new page in the Stories database with:
 
 Note: Stories database does NOT have a `模組🖍️` property. Module is set on Tasks only.
 
-**Step 3: Create 階段時程**（條件執行）
+**Step 3: ~~Create 階段時程~~（已停用）**
 
-> ⚠️ **補建 Story 情境跳過此步驟**：若功能已處於 `uat` / `pending_release` / `release` 狀態（即補建 Story，非新功能規劃），**直接跳到 Step 4**，不建立 階段時程。各開發階段已過，補建只製造雜訊。
-
-一般新功能（`backlog` / `planning` / `dev`）才執行：For each phase, create an entry in 階段時程 linked to the Story.
-Also set `負責人們🖍️` (people property) on each phase entry.
+> 🚫 **永遠跳過此步驟**，直接進 Step 4。階段時程不再在 pm-project-setup 流程中建立。
 
 **Step 4: Create Tasks**
 
