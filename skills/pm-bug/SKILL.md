@@ -72,6 +72,7 @@ The user may report one or multiple bugs at once. For each bug, extract from the
 5. **Fix type** — auto-derive from priority (see below)
 6. **Assignee** — fetch Notion users and ask
 7. **Sprint** — search Sprint DB `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`, pick the most recent date ≤ today
+8. **回報時間** — 從用戶描述擷取（`YYYY-MM-DD HH:MM`）；若未提及，使用目前時間（`date '+%Y-%m-%d %H:%M'`）
 
 **Interactive selection UX (IMPORTANT):**
 
@@ -96,6 +97,8 @@ Create a new page in the Bug database with gathered information.
 
 ```
 ## 問題描述
+
+回報時間：{YYYY-MM-DD HH:MM}
 
 {根據使用者描述填寫}
 
@@ -334,13 +337,18 @@ After creating all Tasks:
 
 4. **Create `fixes/<slug>/meta.yaml`** in havppen-spec:
    ```yaml
+   name: <bug title>
+   status: dev
+   reported_at: "YYYY-MM-DD HH:MM"   # 回報時間，從 Step 1 取得
+   repos:
+     - repo: <repo-name>
+       branch: fix/<slug>
    notion:
      bug: <bug-page-url>
      tasks:
        修復: <fix-task-url>      # 緊急修復 or 開發
        驗收: <uat-task-url>
        更版: <release-task-url>
-   worktree: ~/Projects/Havppen/havppen/worktrees/<slug>
    ```
 
 **Step 5: Confirm and show links**
