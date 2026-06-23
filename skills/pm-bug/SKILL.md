@@ -72,7 +72,7 @@ The user may report one or multiple bugs at once. For each bug, extract from the
 5. **Fix type** — auto-derive from priority (see below)
 6. **Assignee** — fetch Notion users and ask
 7. **Sprint** — search Sprint DB `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`, pick the most recent date ≤ today
-8. **回報時間** — 從用戶描述擷取（`YYYY-MM-DD HH:MM`）；若未提及，使用目前時間（`date '+%Y-%m-%d %H:%M'`）
+8. **回報時間（客戶實際回報時間）** — **一律用 `AskUserQuestion` 問使用者**「客戶實際回報這個 bug 的時間」（日期 + 時分）。**禁止 silently 用目前時間 / 建卡時間**——客戶回報時間系統抓不到，建卡時間 ≠ 回報時間，而 DORA MTTR 從「回報」起算，用錯起點 MTTR 全失真。使用者確實不知道時填估計值並在 meta `timeline.reported_at` 標 `# 待確認`。寫進 Notion 時 **API 設 `is_datetime: 1`**（純日期 → datetime），否則只存日期、時間全丟
 
 **Interactive selection UX (IMPORTANT):**
 
@@ -86,6 +86,7 @@ Apply `AskUserQuestion` for:
 - **Priority** — when ambiguous, ask with P0/P1/P2 as options with descriptions
 - **Fix type** — when priority is P1, ask 緊急修復 vs 完整修復
 - **Sprint** — always show the selected sprint name (e.g. "2026 W12") as "(Recommended)" option with "Other" fallback; never silently auto-select
+- **回報時間** — 問「客戶實際回報時間」（提供「剛剛 / 今天稍早 / 昨天 / 其他（自填日期時間）」之類選項或直接讓使用者輸入）；**禁止 silently 用目前時間**，系統抓不到客戶回報時間
 
 **Batch mode:** When the user reports multiple bugs, auto-fill all fields you can infer, then show a plain summary table in text, followed by ONE `AskUserQuestion` call for the remaining unknown(s) (e.g., assignee). Apply the same answer to all bugs unless the user specifies otherwise via "Other".
 
@@ -340,7 +341,7 @@ After creating all Tasks:
    name: <bug title>
    status: dev
    timeline:
-     reported_at: <ISO8601>   # 客戶回報時間，從 Step 1 取得；ISO8601 含時分秒 YYYY-MM-DDTHH:MM:SSZ（不確定時填日期+T00:00:00Z 並加 # 待確認）
+     reported_at: <ISO8601>   # 客戶實際回報時間，從 Step 1 #8 問使用者取得（禁用目前時間）；ISO8601 含時分秒 YYYY-MM-DDTHH:MM:SSZ（不確定時填估計值 + # 待確認）
    # fix_started_at / fix_completed_at / released_at / regression 由 post-merge-cleanup 收尾回填，開卡時不填
    repos:
      - repo: <repo-name>
