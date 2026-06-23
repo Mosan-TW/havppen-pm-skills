@@ -339,7 +339,9 @@ After creating all Tasks:
    ```yaml
    name: <bug title>
    status: dev
-   reported_at: "YYYY-MM-DD HH:MM"   # 回報時間，從 Step 1 取得
+   timeline:
+     reported_at: <ISO8601>   # 客戶回報時間，從 Step 1 取得；ISO8601 含時分秒 YYYY-MM-DDTHH:MM:SSZ（不確定時填日期+T00:00:00Z 並加 # 待確認）
+   # fix_started_at / fix_completed_at / released_at / regression 由 post-merge-cleanup 收尾回填，開卡時不填
    repos:
      - repo: <repo-name>
        branch: fix/<slug>
