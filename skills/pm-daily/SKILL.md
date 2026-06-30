@@ -1,8 +1,16 @@
 ---
 name: pm-daily
 description: "Generate the daily Slack standup report from Notion tasks. Use this when the user says /pm-daily, '產生今日報表', '幫我寫今天的 slack', '今天的執行項目', or wants to prepare the daily progress update for Slack."
+model: haiku
 allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-search, mcp__plugin_Notion_notion__notion-update-data-source
 ---
+
+<!-- HAIKU-DELEGATE-MARKER -->
+> **執行模型：Haiku（省用量）**
+> 本 skill 為機械型流程（Notion CRUD + 格式化），不需深推理。
+> 若你目前**不是** Haiku，請改用 Agent tool 派一個 `model: haiku` 的 sub-agent，
+> prompt 指示它「呼叫本 skill 並完成全部步驟」，主 session 不要親自跑。
+> 例外：流程中出現需判斷／取捨的 edge case，sub-agent 應回報主 session 交高階模型決定。
 
 ## Notion Structure
 

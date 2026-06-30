@@ -1,8 +1,16 @@
 ---
 name: pm-qa
 description: "QA 測試設計引導：從功能描述或 Story 產生測試場景，涵蓋單點行為與完整使用者流程。Use this when the user says /pm-qa, '幫我設計測試', '這個功能要怎麼測', '產生測試案例', or is a QA preparing to test a feature."
+model: haiku
 allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-search, Bash(hpc qa scenario *)
 ---
+
+<!-- HAIKU-DELEGATE-MARKER -->
+> **執行模型：Haiku（省用量）**
+> 本 skill 為機械型流程（Notion CRUD + 格式化），不需深推理。
+> 若你目前**不是** Haiku，請改用 Agent tool 派一個 `model: haiku` 的 sub-agent，
+> prompt 指示它「呼叫本 skill 並完成全部步驟」，主 session 不要親自跑。
+> 例外：流程中出現需判斷／取捨的 edge case，sub-agent 應回報主 session 交高階模型決定。
 
 ## 你的角色
 

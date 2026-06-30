@@ -1,8 +1,16 @@
 ---
 name: pm-update
 description: "Sync the latest PM skills from the havppen-pm-skills repo. Use this when the user says /pm-update, '更新 skill', '同步 PM skill', or wants to pull the latest skill changes from the team."
+model: haiku
 allowed-tools: Bash
 ---
+
+<!-- HAIKU-DELEGATE-MARKER -->
+> **執行模型：Haiku（省用量）**
+> 本 skill 為機械型流程（Notion CRUD + 格式化），不需深推理。
+> 若你目前**不是** Haiku，請改用 Agent tool 派一個 `model: haiku` 的 sub-agent，
+> prompt 指示它「呼叫本 skill 並完成全部步驟」，主 session 不要親自跑。
+> 例外：流程中出現需判斷／取捨的 edge case，sub-agent 應回報主 session 交高階模型決定。
 
 ## Your task
 

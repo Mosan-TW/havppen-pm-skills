@@ -1,8 +1,16 @@
 ---
 name: pm-weekly
 description: "Generate weekly progress summary from Notion Sprint tasks. Supports personal mode (my tasks) and team mode (all members). Use this when the user says /pm-weekly, '上週進度', '我的週報', '週報', 'weekly summary', or wants to review last week's completed work. Add 'team' or '團隊' for team mode."
+model: haiku
 allowed-tools: mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, Agent
 ---
+
+<!-- HAIKU-DELEGATE-MARKER -->
+> **執行模型：Haiku（省用量）**
+> 本 skill 為機械型流程（Notion CRUD + 格式化），不需深推理。
+> 若你目前**不是** Haiku，請改用 Agent tool 派一個 `model: haiku` 的 sub-agent，
+> prompt 指示它「呼叫本 skill 並完成全部步驟」，主 session 不要親自跑。
+> 例外：流程中出現需判斷／取捨的 edge case，sub-agent 應回報主 session 交高階模型決定。
 
 ## Notion Structure
 

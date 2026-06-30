@@ -1,8 +1,16 @@
 ---
 name: pm-link-task
 description: "Find the right Story/Epic for a Task and link them, or create a new Story if none exists. Use this when the user says /pm-link-task, '這個 task 要掛在哪', '找一下對應的 story', '幫我把 task 歸類', or has orphaned tasks that need to be attached to a project."
+model: haiku
 allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-search, mcp__plugin_Notion_notion__notion-update-page, mcp__plugin_Notion_notion__notion-update-data-source
 ---
+
+<!-- HAIKU-DELEGATE-MARKER -->
+> **執行模型：Haiku（省用量）**
+> 本 skill 為機械型流程（Notion CRUD + 格式化），不需深推理。
+> 若你目前**不是** Haiku，請改用 Agent tool 派一個 `model: haiku` 的 sub-agent，
+> prompt 指示它「呼叫本 skill 並完成全部步驟」，主 session 不要親自跑。
+> 例外：流程中出現需判斷／取捨的 edge case，sub-agent 應回報主 session 交高階模型決定。
 
 ## Notion Structure
 
