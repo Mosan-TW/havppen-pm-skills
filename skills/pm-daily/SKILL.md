@@ -2,7 +2,7 @@
 name: pm-daily
 description: "Generate the daily Slack standup report from Notion tasks. Use this when the user says /pm-daily, '產生今日報表', '幫我寫今天的 slack', '今天的執行項目', or wants to prepare the daily progress update for Slack."
 model: haiku
-allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-search, mcp__plugin_Notion_notion__notion-update-data-source
+allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-search, mcp__plugin_Notion_notion__notion-update-data-source, Bash
 ---
 
 <!-- HAIKU-DELEGATE-MARKER -->
@@ -12,12 +12,14 @@ allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notio
 > prompt 指示它「呼叫本 skill 並完成全部步驟」，主 session 不要親自跑。
 > 例外：流程中出現需判斷／取捨的 edge case，sub-agent 應回報主 session 交高階模型決定。
 
+> **Notion MCP Fallback**: MCP 回 500 時，讀 `shared/notion-api-fallback.md` 切換到 Bash + REST API。
+
 ## Notion Structure
 
-Hierarchy: **Epic → Story → Task** (+ 階段時程 parallel to Task)
+Hierarchy: **Group（選填，僅多階段 feature）→ Story → Task** (+ 階段時程 parallel to Task)
 
 Key databases:
-- Tasks: `collection://2d9268e7-4af8-8003-8d86-000b45718394`
+- Tasks: `2d9268e74af88074ae62ddfa3090f7a1` (REST DB id；不可用 collection:// view UUID 餵 REST API，會 404)
 - Stories: `collection://2d9268e7-4af8-8166-8238-000bd8445fdb`
 - Modules (模組): `collection://2e8268e7-4af8-803d-bb1b-000bbc327576`
 - Sprints: `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`

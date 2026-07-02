@@ -39,14 +39,18 @@ The skill accepts optional arguments in the format:
 
 ## Notion Structure
 
-Hierarchy: **Epic → Story → (階段時程 + Tasks)**
+Hierarchy: **Group（選填）→ Story → (階段時程 + Tasks)**
+
+> **Group 填寫規則**：只有 feature 需拆成多個階段時才建立 / 關聯 Group。
+> Story 命名 `<Group名>｜第N階段`（如 `電子報改版｜第一階段`），Group = `電子報改版`。
+> 單一階段的 feature **不填 Group**，`Group🖍️` 欄位留空。
 
 Key databases（REST DB id；不要用 `collection://` view UUID，REST 會回 404）：
 
 | DB | REST Database ID |
 |----|-----------------|
 | Stories | `2d9268e74af88105a52ff323aed1cfcb` |
-| Epics | `2d9268e74af880d69225ee4bc7269453` |
+| StoryGroup（原 Epics） | `2d9268e74af880d69225ee4bc7269453` |
 | Tasks | `2d9268e74af88074ae62ddfa3090f7a1` |
 | 階段時程 | `2dc268e74af8809cab97f0a57e991f00` |
 | Modules | `2e8268e74af8803dbb1b000bbc327576` |
@@ -87,7 +91,7 @@ Extract as much as possible from the user's description, apply sensible defaults
 - **Tasks** — from numbered items or sub-points in the description
 
 ### 1b. Lookup from Notion (do these in parallel)
-- **Epic** — search Epics database (`collection://2d9268e7-4af8-8005-a5b3-000b2a4297b6`) to find candidates matching the feature domain
+- **Group** — **僅在 feature 拆多階段時才查**（Story 名含 `｜第N階段`、或用戶明說分階段）。search StoryGroup database（REST DB id `2d9268e74af880d69225ee4bc7269453`）找既有 Group，沒有就建新 Group（名稱 = 不含階段字尾的 feature 名）。單一階段 feature 跳過此項，Group 留空
 - **Module** — search Modules database (`collection://2e8268e7-4af8-803d-bb1b-000bbc327576`) to find matching modules
 
 ### 1c. Apply defaults
@@ -115,7 +119,7 @@ Show a table with all values pre-filled, then ask the user to confirm or modify 
 | 欄位 | 值 |
 |------|-----|
 | Story | <extracted name> |
-| Epic | <best match from search> |
+| Group | <多階段時填 best match，否則「—（單一階段，不需 Group）」> |
 | 模組 | <best match from search> |
 | 流程 | 簡易流程 |
 | 優先級 | 中 |
@@ -129,7 +133,7 @@ Tasks（所屬階段：開發）:
 
 Then use AskUserQuestion with options like:
 - `確認，開始建立` — proceed with all values as shown
-- `修改 Epic` — show Epic list as numbered options (from Notion search results)
+- `修改 Group` — show Group list as numbered options (from Notion search results)；也可選「不需 Group」清空
 - `修改模組` — show Module list as numbered options (from Notion search results)
 - `修改流程` — toggle between 完整流程 / 簡易流程
 - `修改優先級` — show 低 / 中 / 高 as options
@@ -143,9 +147,10 @@ Phases are pre-filled based on flow type — no need to ask unless the user want
 **Step 2: Create Story**
 
 Create a new page in the Stories database with:
-- Title: story name
-- Link to Epic
+- Title: story name（多階段時命名 `<Group名>｜第N階段`）
+- `Group🖍️` — 僅多階段 feature 才 link Group；單一階段留空
 - Description (if provided)
+- `一句話描述` — **必填**，一句話 TL;DR（story 內文一律很長，需可在 DB 列表/看板直接掃讀）。寫「這支 story 在做什麼 + 解什麼痛點」一句話，不要貼規劃內文。**禁止留空**
 - `優先級🖍️` — 低 / 中 / 高
 - `負責人1🖍️` — assignee (people property)
 - `是否執行🖍️` — 正常執行 / 因故暫停 / 因故取消
@@ -193,7 +198,7 @@ Show a summary of what was created with clickable Notion links:
 ## Notes
 
 - Prefer creating a few well-defined tasks over many vague ones
-- If unsure about Epic, search Notion first before asking
+- Group 判斷：feature 有分階段（第一階段 / 第二階段…）才需要 Group；不確定時先問用戶「這個功能會分階段嗎？」，不要預設建 Group
 - Task names should be action-oriented: "實作 API endpoint", "設計資料庫 schema", not "API"
 
 
