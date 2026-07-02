@@ -1,8 +1,8 @@
 ---
 name: pm-weekly
-description: "Generate weekly progress summary from Notion Sprint tasks. Supports personal mode (my tasks) and team mode (all members). Use this when the user says /pm-weekly, '上週進度', '我的週報', '週報', 'weekly summary', or wants to review last week's completed work. Add 'team' or '團隊' for team mode."
+description: "Generate weekly progress summary from Notion Sprint tasks. Supports personal mode (my tasks) and team mode (all members). Use this when the user says /pm-weekly, '上週進度', 'Notion 週報', 'sprint 週報', 'weekly summary', or wants to review last week's completed work from Notion Sprint. Add 'team' or '團隊' for team mode. NOTE: 不吃裸『週報』(→ weekly-team) 與『我的週報』(→ weekly-personal)，那兩支掃 git/daily-log；pm-weekly 專掃 Notion Sprint。"
 model: haiku
-allowed-tools: mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, Agent
+allowed-tools: mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, Agent, Bash
 ---
 
 <!-- HAIKU-DELEGATE-MARKER -->
@@ -12,9 +12,11 @@ allowed-tools: mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notio
 > prompt 指示它「呼叫本 skill 並完成全部步驟」，主 session 不要親自跑。
 > 例外：流程中出現需判斷／取捨的 edge case，sub-agent 應回報主 session 交高階模型決定。
 
+> **Notion MCP Fallback**: MCP 回 500 時，讀 `shared/notion-api-fallback.md` 切換到 Bash + REST API。Batch fetch subagent prompt 也要帶入 fallback 指引。
+
 ## Notion Structure
 
-- Tasks DB: `collection://2d9268e7-4af8-8003-8d86-000b45718394`
+- Tasks DB: `2d9268e74af88074ae62ddfa3090f7a1` (REST DB id；不可用 collection:// view UUID 餵 REST API，會 404)
 - Sprint DB: `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`
 - Stories DB: `collection://2d9268e7-4af8-8166-8238-000bd8445fdb`
 - Modules DB: `collection://2e8268e7-4af8-803d-bb1b-000bbc327576`
@@ -85,7 +87,7 @@ Group tasks by business domain, NOT by phase. Merge related phases into one line
 **Merge rules:**
 - Same bug/feature across phases (緊急修復 + 緊急更版 + 驗收) → one line, sum points
 - Same feature (開發 + 更版) → one line, sum points
-- Match by similar title keywords (strip phase prefix like `[開發]`, `[更版]`, `[驗收]`)
+- Match by similar title keywords（strip 自動化前綴 `[模組] Story名 - ` / `{Bug名} - `，以及歷史卡的 `[開發]`、`[更版]`、`[驗收]` 前綴）
 
 **Functional area detection** (by keywords in title or module):
 - 兌換券 / 兌換 → 兌換券相關

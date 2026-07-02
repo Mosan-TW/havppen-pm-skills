@@ -1,13 +1,16 @@
 ---
 name: pm-sentry
-description: "Create a Notion Bug report and investigation Task from a Sentry issue URL or ID. Use this when the user says /pm-sentry, pastes a sentry.io URL, mentions a Sentry issue ID like 'HAVPPEN-API-V1-Q7', or says '幫我把這個 Sentry 錯誤開成 bug'."
-allowed-tools: mcp__sentry__get_issue_details, mcp__sentry__search_issue_events, mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-create-pages, mcp__plugin_Notion_notion__notion-get-users
+description: "Create a Notion Bug report, investigation Task, and sentry/<slug>/meta.yaml from a Sentry issue URL or ID. Use this when the user says /pm-sentry, pastes a sentry.io URL, mentions a Sentry issue ID like 'HAVPPEN-API-V1-Q7', or says '幫我把這個 Sentry 錯誤開成 bug'."
+model: sonnet
+allowed-tools: mcp__sentry__get_issue_details, mcp__sentry__search_issue_events, mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-create-pages, mcp__plugin_Notion_notion__notion-get-users, Bash, Write
 ---
+
+> **Notion MCP Fallback**: MCP 回 500 時，讀 `shared/notion-api-fallback.md` 切換到 Bash + REST API。
 
 ## Notion Structure
 
 - Bug DB: `collection://2e8268e7-4af8-80a5-ad02-000b7bce538d`
-- Tasks DB: `collection://2d9268e7-4af8-8003-8d86-000b45718394`
+- Tasks DB: `2d9268e74af88074ae62ddfa3090f7a1` (REST DB id；不可用 collection:// view UUID 餵 REST API，會 404)
 - Modules: `collection://2e8268e7-4af8-803d-bb1b-000bbc327576`
 
 ## Your task
@@ -69,10 +72,33 @@ Page content (Markdown):
 - [ ] {investigation item 2}
 ```
 
+**Step 4.5: Create `sentry/<slug>/meta.yaml`**
+
+Derive `<slug>` from the issue title: kebab-case, max 5 words, e.g. `media-library-not-supported-provider`.
+
+Write to `havppen-spec/sentry/<slug>/meta.yaml`:
+```yaml
+name: {concise title}
+priority: {P0/P1/P2}
+status: triage
+sentry:
+  issue_id: {issueId}
+  url: {issue URL}
+  project: {project slug}
+  first_seen: {YYYY-MM-DD}
+  last_seen: {YYYY-MM-DD}
+  occurrences: {count}
+repos: []
+notion:
+  bug: {notion bug URL — fill after Step 4}
+  tasks:
+    調查: {notion task URL — fill after Step 5}
+```
+
 **Step 5: Create investigation Task**
 
 Create a Task linked to the Bug:
-- `名稱🖍️` — `[調查] {bug title 簡短版}`
+- `名稱🖍️` — `調查`（已 link Bug，Notion 自動化會補 `{bug title} - ` 前綴，勿重複 bug title）
 - `Bug🖍️` — link to just-created Bug
 - `優先級🖍️` — 臨時 (for P0/P1) or 高 (for P2)
 - `所屬階段🖍️` — 前期規劃

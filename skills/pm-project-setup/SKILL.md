@@ -107,7 +107,7 @@ Extract as much as possible from the user's description, apply sensible defaults
 - 簡易流程：**開發 / 人工測試 / 更版 / 驗收** 四張，缺一不可
 - 完整流程：**前期規劃 / 後期規劃 / 開發 / 人工測試 / 更版 / 驗收** 六張，缺一不可
 
-缺少任何階段 → 自動補齊（名稱：`[<階段>] <Story name>`），不詢問用戶。補完後在 1d 確認表格用 ✨ 標記自動補的 task，讓用戶知道補了什麼。
+缺少任何階段 → 自動補齊（名稱：`<階段>`，如 `開發`、`人工測試`；**不加 Story 名**），不詢問用戶。補完後在 1d 確認表格用 ✨ 標記自動補的 task，讓用戶知道補了什麼。
 
 > 教訓：第 2 次發生「Story 建好但沒驗收 task」。Step 4 規則已列必建，但 Step 1d 確認時沒擋住 → 自動補齊才是硬閘門。
 
@@ -163,8 +163,12 @@ Note: Stories database does NOT have a `模組🖍️` property. Module is set o
 
 **Step 4: Create Tasks**
 
+> ⚠️ **卡片命名規則（Notion 自動化）**：Task link Story 後，自動化會把名稱改為 `[模組] Story名 - {卡名}`。
+> 因此 `名稱🖍️` **只寫階段 / 動作本身**（如 `開發`、`人工測試`、`更版`、`驗收`、`第一階段方向評估`），
+> **不要重複 Story 名、不要加 `[階段]` 前綴**，否則會出現重複名稱。
+
 For each task, create an entry in Tasks with:
-- `名稱🖍️` — task name
+- `名稱🖍️` — task name（只寫階段 / 動作，見上方命名規則）
 - `Story🖍️` — link to the Story just created
 - `模組🖍️` — same module as Story
 - `所屬階段🖍️` — matching phase
@@ -199,7 +203,7 @@ Show a summary of what was created with clickable Notion links:
 
 - Prefer creating a few well-defined tasks over many vague ones
 - Group 判斷：feature 有分階段（第一階段 / 第二階段…）才需要 Group；不確定時先問用戶「這個功能會分階段嗎？」，不要預設建 Group
-- Task names should be action-oriented: "實作 API endpoint", "設計資料庫 schema", not "API"
+- Task names should be action-oriented: "實作 API endpoint", "設計資料庫 schema", not "API"；且不含 Story 名（自動化會補）
 
 
 ---

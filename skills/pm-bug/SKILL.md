@@ -235,22 +235,24 @@ Default: always create the Task pipeline unless the user explicitly says not to.
 
 Based on fix type, create a **pipeline of Tasks** with sequential dependencies (each Task's `依賴 Task🖍️` points to the previous one):
 
+> ⚠️ **卡片命名規則（Notion 自動化）**：Task link Bug 後，自動化會把名稱改為 `{Bug名} - {卡名}`。因此 `名稱🖍️` **只寫階段本身**（如 `開發`、`緊急修復`），**不要重複 bug title、不要加 `[階段]` 前綴**，否則名稱重複。
+
 ### 緊急修復 (hotfix) — 3 Tasks
 
-| # | 名稱🖍️ prefix | 所屬階段🖍️ | 優先級🖍️ |
-|---|---------------|-----------|---------|
-| 1 | `[緊急修復]` | 緊急修復 | 臨時 |
-| 2 | `[緊急更版]` | 緊急更版 | 臨時 |
-| 3 | `[驗收]` | 驗收 | 臨時 |
+| # | 名稱🖍️ | 所屬階段🖍️ | 優先級🖍️ |
+|---|--------|-----------|---------|
+| 1 | `緊急修復` | 緊急修復 | 臨時 |
+| 2 | `緊急更版` | 緊急更版 | 臨時 |
+| 3 | `驗收` | 驗收 | 臨時 |
 
 ### 完整修復 (full fix) — 4 Tasks
 
-| # | 名稱🖍️ prefix | 所屬階段🖍️ | 優先級🖍️ |
-|---|---------------|-----------|---------|
-| 1 | `[開發]` | 開發 | 高 |
-| 2 | `[人工測試]` | 人工測試 | 高 |
-| 3 | `[更版]` | 更版 | 高 |
-| 4 | `[驗收]` | 驗收 | 高 |
+| # | 名稱🖍️ | 所屬階段🖍️ | 優先級🖍️ |
+|---|--------|-----------|---------|
+| 1 | `開發` | 開發 | 高 |
+| 2 | `人工測試` | 人工測試 | 高 |
+| 3 | `更版` | 更版 | 高 |
+| 4 | `驗收` | 驗收 | 高 |
 
 **Default fix type by priority:**
 - P0 → 緊急修復
@@ -261,20 +263,20 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 - `Bug🖍️` — link to the Bug just created
 - `模組🖍️` — same module as the Bug
 - `狀態🖍️` — 即將進行
-- `名稱🖍️` — `{prefix} {bug title}`
+- `名稱🖍️` — 只填階段名（如 `開發`；自動化會補 `{bug title} - ` 前綴，勿重複 bug title）
 - `依賴 Task🖍️` — previous Task in the pipeline (except the first Task)
 - `執行者們🖍️` — assignee (from Step 1)
 - `Sprint🖍️` — sprint (from Step 1)
 
 **`Git Branch / PR🖍️` 規則（更版類 Task 專用）：**
-- `[更版]` 和 `[緊急更版]` Task 必須填入 `Git Branch / PR🖍️`（注意：Notion Tasks DB 的正確欄位名稱是 `Git Branch / PR🖍️`，不是 `Git Branch🖍️`）
+- `更版` 和 `緊急更版` Task 必須填入 `Git Branch / PR🖍️`（注意：Notion Tasks DB 的正確欄位名稱是 `Git Branch / PR🖍️`，不是 `Git Branch🖍️`）
 - **值優先填正式站 PR 完整網址**（例如 `https://github.com/Mosan-TW/newscms/pull/726`）；若 PR 尚未開，填 branch name（例如 `fix/member-admin-email-not-saved`）
 - PR 開出後若欄位還是 branch name，應補改為 PR URL
 - **若有多個 PR（前端 + 後端），欄位填第一個 PR URL，其餘 PR 記錄在卡片內文**（見下方「PR 內文格式」）
 - **避免使用 `main`**：修復應在獨立 branch 進行，再 merge 進 main，而非直接在 main 上開發
 - 其他 Task（開發、人工測試、驗收 等）不需要填
 
-**更版卡 PR 內文格式（`[更版]` 和 `[緊急更版]` Task body 必加）：**
+**更版卡 PR 內文格式（`更版` 和 `緊急更版` Task body 必加）：**
 
 ```
 ## 相關 PR
