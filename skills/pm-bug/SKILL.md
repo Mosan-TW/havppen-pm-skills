@@ -127,9 +127,48 @@ Create a new page in the Bug database with gathered information. 開卡時必須
 （修復完成後由 Claude Code 根據 diff / commit 自動產出）
 ```
 
+**「技術描述」欄位 / 「根本原因」section / 完成後 Task 內文撰寫格式（白話敘事，強制）：**
+
+修復完成後填入 `技術描述` 欄位、Bug page 的「根本原因」section、以及 開發/緊急修復 Task 內文的完成說明，一律用**白話敘事**寫，PM / 非工程背景的人要看得懂修復狀況。用固定五段結構：
+
+```
+## 問題是什麼
+{用行為描述，不用術語：什麼操作後、什麼東西壞了/沒發生}
+
+## 為什麼會這樣
+{用生活化比喻或簡化邏輯講根因，避免直接丟變數名/函式名/程式碼片段}
+
+## 連帶找到的問題
+{若修復過程中發現其他關聯問題，這裡說；沒有就省略此段}
+
+## 怎麼修的
+{一兩句話講修法方向，不逐行講 diff}
+
+## 驗證方式
+{怎麼確認修好了：測試涵蓋範圍、跑了幾個案例、有沒有真實資料庫驗證}
+```
+
+**禁止**：引用程式碼片段（``` code block）、變數名、檔案路徑、框架/函式庫術語堆疊（如 TypeORM/Prisma/repository.create 這類）直接出現在敘事段落裡。這些技術細節可以留在 git commit message、PR description、`fixes/<slug>/context.md`（給工程師看的地方），Notion 卡片是給 PM 看的，術語堆疊會讓人讀不懂修復狀況（2026-07-10 使用者實測反饋：原本堆技術術語的寫法「不容易閱讀」）。
+
 **Step 3: Generate test scenarios**
 
 Before creating Tasks, draft test scenarios for the bug fix. These will be embedded directly into the 人工測試 and 驗收 Task bodies.
+
+**Step 3.0: Read implementation before writing Gherkin（UI bug 強制）**
+
+若 bug 涉及 UI 行為（元件顯示文字、點擊行為、導覽結果），**必須先找到並讀相關 component 實作**，再寫 `Then` 子句：
+
+```bash
+# 找相關 component
+grep -r "availableAfter\|<關鍵 prop>" apps/app/src --include="*.tsx" -l
+# 讀實作
+# → 確認實際 UI 文字（e.g. "尚未開始：..." 而非自行推測的文字）
+# → 確認 click 行為（阻止導覽？redirect？還是可點但換 path？）
+```
+
+**禁止從 bug 描述直接推斷** `Then` 子句行為——描述說「無法點入」不代表 `e.preventDefault()`，可能只是 path 改為介紹頁。讀錯實作 = 寫錯 Gherkin = QA 驗收通過錯誤行為。
+
+若 bug 純屬後端 / 資料問題（無 UI component），可跳過此步驟。
 
 **For every bug, generate at minimum:**
 
