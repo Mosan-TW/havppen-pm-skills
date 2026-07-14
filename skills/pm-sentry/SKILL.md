@@ -44,6 +44,10 @@ From the stack trace and extra data, provide a brief diagnosis:
 
 **Step 4: Create Bug in Notion**
 
+> ⚠️ **`名稱🖍️` 與「問題描述」段用白話**（Bug DB 與 PM 共用，見 `shared/notion-card-writing-style.md`）：
+> 標題寫**行為**——使用者遇到什麼（✅「[kingway] 結帳後付款通知一直失敗」／❌「[kingway] PaymentCallbackController 噴 403」）；問題描述用一兩句話講「什麼情況下、什麼壞了、影響誰」。
+> **本 skill 的例外（不必白話）**：Sentry issue id / firstSeen / occurrences / stack trace / 可能原因 / 待調查——這些是工程師 triage 的必要識別資料與線索，屬「關鍵識別資料」性質，保留技術內容。
+
 Create a page in Bug DB with:
 - `名稱🖍️` — concise title, include [appId] prefix if relevant: `[kingway] 金流通知持續噴 403`
 - `等級🖍️` — P0 / P1 / P2

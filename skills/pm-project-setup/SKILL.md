@@ -144,6 +144,11 @@ Phases are pre-filled based on flow type — no need to ask unless the user want
 
 **Step 2: Create Story**
 
+> ⚠️ **寫內文前必讀 `shared/notion-card-writing-style.md`**（單一事實來源）。
+> Story 卡是給 PM / QA 看的，**內文一律白話**：禁檔案路徑、行號、程式碼片段、變數 / DTO / 資料表 / 端點名稱、框架術語堆疊（GQL / REST / client-side / adapter / view…）。技術細節留 `features/<slug>/context.md` 與 openspec change，內文最後用一句話指路過去即可。
+> Story 段落結構（客戶要什麼 / 現在的狀況 / 規劃時查到的事 / 決定怎麼做 / 要避開的坑 / 影響範圍 / 需要注意 / 詳細規格）與改寫對照範例見該檔。
+> **判準**：把卡片拿給不寫 code 的同事看，他能不能講出「這張卡在做什麼、為什麼要做、做完會怎樣」。不能就是還不夠白話。
+
 Create a new page in the Stories database with:
 - Title: story name（多階段時命名 `<Group名>｜第N階段`）
 - `Group🖍️` — 僅多階段 feature 才 link Group；單一階段留空
@@ -208,9 +213,9 @@ Show a summary of what was created with clickable Notion links:
 ## Maintenance
 
 This skill is managed in the `havppen-pm-skills` repo (`~/Projects/Havppen/havppen-pm-skills`).
-After editing `~/.claude/skills/pm-project-setup/SKILL.md`, sync back:
+**唯一來源是 `~/Projects/Havppen/havppen/havppen-spec/.claude/skills/pm-project-setup/SKILL.md`**（pm-* 系列**不在** `~/.claude/skills/`，別往那裡找）。改完後同步回 pm-skills repo：
 
 ```bash
-cp ~/.claude/skills/pm-project-setup/SKILL.md ~/Projects/Havppen/havppen-pm-skills/skills/pm-project-setup/SKILL.md
+cp ~/Projects/Havppen/havppen/havppen-spec/.claude/skills/pm-project-setup/SKILL.md ~/Projects/Havppen/havppen-pm-skills/skills/pm-project-setup/SKILL.md
 cd ~/Projects/Havppen/havppen-pm-skills && git add skills/pm-project-setup/SKILL.md && git commit -m "..." && git push
 ```
