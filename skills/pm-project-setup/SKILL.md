@@ -53,7 +53,6 @@ Key databases（REST DB id；不要用 `collection://` view UUID，REST 會回 4
 | StoryGroup（原 Epics） | `2d9268e74af880d69225ee4bc7269453` |
 | Tasks | `2d9268e74af88074ae62ddfa3090f7a1` |
 | 階段時程 | `2dc268e74af8809cab97f0a57e991f00` |
-| Modules | `2e8268e74af8803dbb1b000bbc327576` |
 
 > ⚠️ 看到 `collection://...` 形式的 ID 一律當 view，**不可餵給 REST API**。若需 search/query 找正確 DB id，從既有 page 反查 `parent.database_id`。
 
@@ -92,7 +91,8 @@ Extract as much as possible from the user's description, apply sensible defaults
 
 ### 1b. Lookup from Notion (do these in parallel)
 - **Group** — **僅在 feature 拆多階段時才查**（Story 名含 `｜第N階段`、或用戶明說分階段）。search StoryGroup database（REST DB id `2d9268e74af880d69225ee4bc7269453`）找既有 Group，沒有就建新 Group（名稱 = 不含階段字尾的 feature 名）。單一階段 feature 跳過此項，Group 留空
-- **Module** — search Modules database (`collection://2e8268e7-4af8-803d-bb1b-000bbc327576`) to find matching modules
+
+> 🚫 **模組已廢除（2026-07-14）**：`模組🖍️` 欄位不再使用，Story 與 Task 都不填、也不要 search Modules database。
 
 ### 1c. Apply defaults
 - **流程類型** → 簡易流程（unless the feature clearly needs PRD/Spec）
@@ -120,7 +120,6 @@ Show a table with all values pre-filled, then ask the user to confirm or modify 
 |------|-----|
 | Story | <extracted name> |
 | Group | <多階段時填 best match，否則「—（單一階段，不需 Group）」> |
-| 模組 | <best match from search> |
 | 流程 | 簡易流程 |
 | 優先級 | 中 |
 | 負責人 | <從 arguments 解析 or ⚠️ 請選擇> |
@@ -134,7 +133,6 @@ Tasks（所屬階段：開發）:
 Then use AskUserQuestion with options like:
 - `確認，開始建立` — proceed with all values as shown
 - `修改 Group` — show Group list as numbered options (from Notion search results)；也可選「不需 Group」清空
-- `修改模組` — show Module list as numbered options (from Notion search results)
 - `修改流程` — toggle between 完整流程 / 簡易流程
 - `修改優先級` — show 低 / 中 / 高 as options
 - `修改 Tasks` — let user edit task list
@@ -150,12 +148,12 @@ Create a new page in the Stories database with:
 - Title: story name（多階段時命名 `<Group名>｜第N階段`）
 - `Group🖍️` — 僅多階段 feature 才 link Group；單一階段留空
 - Description (if provided)
-- `一句話描述` — **必填**，一句話 TL;DR（story 內文一律很長，需可在 DB 列表/看板直接掃讀）。寫「這支 story 在做什麼 + 解什麼痛點」一句話，不要貼規劃內文。**禁止留空**
+- **內文第一個 block 必為 callout**，寫一句話 TL;DR（story 內文一律很長，需可一眼掃到重點）。寫「這支 story 在做什麼 + 解什麼痛點」一句話，不要貼規劃內文。**禁止留空**
 - `優先級🖍️` — 低 / 中 / 高
 - `負責人1🖍️` — assignee (people property)
 - `是否執行🖍️` — 正常執行 / 因故暫停 / 因故取消
 
-Note: Stories database does NOT have a `模組🖍️` property. Module is set on Tasks only.
+> ⚠️ Stories DB **沒有** `模組🖍️`，也**沒有** `一句話描述` 欄位（2026-07-14 以 REST `GET /v1/databases` 實查確認）。不要嘗試寫入這兩個 property，會 400。
 
 **Step 3: ~~Create 階段時程~~（已停用）**
 
@@ -163,14 +161,13 @@ Note: Stories database does NOT have a `模組🖍️` property. Module is set o
 
 **Step 4: Create Tasks**
 
-> ⚠️ **卡片命名規則（Notion 自動化）**：Task link Story 後，自動化會把名稱改為 `[模組] Story名 - {卡名}`。
+> ⚠️ **卡片命名規則（Notion 自動化）**：Task link Story 後，自動化會改寫名稱補上 Story 名。
 > 因此 `名稱🖍️` **只寫階段 / 動作本身**（如 `開發`、`人工測試`、`更版`、`驗收`、`第一階段方向評估`），
 > **不要重複 Story 名、不要加 `[階段]` 前綴**，否則會出現重複名稱。
 
 For each task, create an entry in Tasks with:
 - `名稱🖍️` — task name（只寫階段 / 動作，見上方命名規則）
 - `Story🖍️` — link to the Story just created
-- `模組🖍️` — same module as Story
 - `所屬階段🖍️` — matching phase
 - `狀態🖍️` — 即將進行
 - `執行者們🖍️` — assignee (ask if not specified)

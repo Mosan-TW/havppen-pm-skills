@@ -11,7 +11,6 @@ allowed-tools: mcp__sentry__get_issue_details, mcp__sentry__search_issue_events,
 
 - Bug DB: `collection://2e8268e7-4af8-80a5-ad02-000b7bce538d`
 - Tasks DB: `2d9268e74af88074ae62ddfa3090f7a1` (REST DB id；不可用 collection:// view UUID 餵 REST API，會 404)
-- Modules: `collection://2e8268e7-4af8-803d-bb1b-000bbc327576`
 
 ## Your task
 

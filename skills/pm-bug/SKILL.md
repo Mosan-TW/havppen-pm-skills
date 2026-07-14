@@ -15,7 +15,6 @@ allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notio
 |----|-------------------|-------------------------|
 | Bug | `collection://2e8268e7-4af8-80a5-ad02-000b7bce538d` | `2e8268e74af880a5ad02000b7bce538d` |
 | Tasks | — | `2d9268e74af88074ae62ddfa3090f7a1` |
-| Modules | `collection://2e8268e7-4af8-803d-bb1b-000bbc327576` | `2e8268e74af8803dbb1b000bbc327576` |
 
 完整對照：`shared/notion-api-fallback.md`。
 
@@ -23,7 +22,6 @@ Bug DB fields:
 - `名稱🖍️` — bug title（**非技術人員可理解的行為描述**，例如「儲存公告後附件消失」）
 - `技術描述` — 技術名稱（給 dev 用，例如「公告附件與 metadata 無法儲存」；開卡時從 bug 描述自動推導填入）
 - `等級🖍️` — P0 (critical), P1 (high), P2 (medium)
-- `模組🖍️` — affected module
 - `回報者🖍️` — reporter
 - `主要客戶們🖍️` — affected customers (optional)
 - `Tasks` — linked fix tasks
@@ -68,12 +66,11 @@ Bug DB fields:
 The user may report one or multiple bugs at once. For each bug, extract from their description:
 1. **Bug title（`名稱🖍️`）** — 非技術人員可理解的行為描述（用使用者語言描述「什麼操作後、什麼東西壞了」，禁用技術術語如 metadata / payload / API）；同時推導一份技術名稱填入 `技術描述` 欄位（給 dev 用的精確描述）
 2. **Priority** — P0/P1/P2 (infer from description; ask if unclear)
-3. **Module** — search Modules DB to find the best match
-4. **Affected customers** — optional, search Customers DB `collection://2e8268e7-4af8-800f-a65c-000be39698a3`
-5. **Fix type** — auto-derive from priority (see below)
-6. **Assignee** — fetch Notion users and ask
-7. **Sprint** — search Sprint DB `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`, pick the most recent date ≤ today
-8. **回報時間（客戶實際回報時間）** — **一律用 `AskUserQuestion` 問使用者**「客戶實際回報這個 bug 的時間」（日期 + 時分）。**禁止 silently 用目前時間 / 建卡時間**——客戶回報時間系統抓不到，建卡時間 ≠ 回報時間，DORA MTTR 從「回報」起算，用錯起點全失真。不確定時填估計值並在 meta `timeline.reported_at` 標 `# 待確認`。寫進 Notion 時 **API 設 `is_datetime: 1`**（純日期 → datetime），否則只存日期、時間全丟：
+3. **Affected customers** — optional, search Customers DB `collection://2e8268e7-4af8-800f-a65c-000be39698a3`
+4. **Fix type** — auto-derive from priority (see below)
+5. **Assignee** — fetch Notion users and ask
+6. **Sprint** — search Sprint DB `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`, pick the most recent date ≤ today
+7. **回報時間（客戶實際回報時間）** — **一律用 `AskUserQuestion` 問使用者**「客戶實際回報這個 bug 的時間」（日期 + 時分）。**禁止 silently 用目前時間 / 建卡時間**——客戶回報時間系統抓不到，建卡時間 ≠ 回報時間，DORA MTTR 從「回報」起算，用錯起點全失真。不確定時填估計值並在 meta `timeline.reported_at` 標 `# 待確認`。寫進 Notion 時 **API 設 `is_datetime: 1`**（純日期 → datetime），否則只存日期、時間全丟：
    ```
    "date:回報時間:start": "2026-06-16T17:30:00+08:00",
    "date:回報時間:is_datetime": 1
@@ -300,7 +297,6 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 
 **All Tasks share these properties:**
 - `Bug🖍️` — link to the Bug just created
-- `模組🖍️` — same module as the Bug
 - `狀態🖍️` — 即將進行
 - `名稱🖍️` — 只填階段名（如 `開發`；自動化會補 `{bug title} - ` 前綴，勿重複 bug title）
 - `依賴 Task🖍️` — previous Task in the pipeline (except the first Task)
@@ -352,7 +348,6 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 
 **⚠️ Field validation after creation:** After all Tasks are created, verify each Task has these fields actually set (not silently skipped):
 - `Bug🖍️` — linked to the Bug page
-- `模組🖍️` — module
 - `執行者們🖍️` — assignee
 - `Sprint🖍️` — sprint
 

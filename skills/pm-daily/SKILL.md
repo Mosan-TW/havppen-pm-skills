@@ -21,8 +21,9 @@ Hierarchy: **Group（選填，僅多階段 feature）→ Story → Task** (+ 階
 Key databases:
 - Tasks: `2d9268e74af88074ae62ddfa3090f7a1` (REST DB id；不可用 collection:// view UUID 餵 REST API，會 404)
 - Stories: `collection://2d9268e7-4af8-8166-8238-000bd8445fdb`
-- Modules (模組): `collection://2e8268e7-4af8-803d-bb1b-000bbc327576`
 - Sprints: `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`
+
+> 🚫 **模組已廢除（2026-07-14）**：不再讀 `模組🖍️`、不再輸出【模組名稱】。舊卡可能仍有模組資料，一律忽略。
 
 Sprint is weekly. `相對 Sprint = 當期` = this week's sprint.
 
@@ -32,23 +33,22 @@ Sprint is weekly. `相對 Sprint = 當期` = this week's sprint.
 MM/DD
 今日執行
 
-【模組名稱】Story名稱 - Task名稱
+Story名稱 - Task名稱
 
 昨日完成
 
-【模組名稱】Story名稱 - Task名稱
+Story名稱 - Task名稱
 
 未完成
 
-【模組名稱】Story名稱 - Task名稱
+Story名稱 - Task名稱
 ```
 
 **Field mapping per line:**
-- `【模組名稱】` → `模組🖍️` relation → fetch module page title
 - `Story名稱` → `Story🖍️` relation → fetch story page title
 - `Task名稱` → `名稱🖍️` (may already include stage prefix like `【開發】xxx`)
 
-If Story is empty, format as: `【模組名稱】 - Task名稱`
+If Story is empty, format as: `Task名稱`（不留空的 ` - ` 破折號）
 
 ## Task Fields
 
@@ -60,7 +60,6 @@ If Story is empty, format as: `【模組名稱】 - Task名稱`
 Sprint🖍️      — linked sprint
 相對 Sprint   — formula: 當期 / 上期 / 下期 / 上上期 / 下下期
 執行者們🖍️   — assignees
-模組🖍️        — module relation
 Story🖍️       — story relation
 ```
 
@@ -87,7 +86,6 @@ Let the user confirm or remove items before including them in the final draft.
 
 **Step 3: Resolve relations**
 For each task, fetch:
-- `模組🖍️` page → get title for 【模組名稱】
 - `Story🖍️` page → get title for Story名稱
 
 Batch these fetches where possible to avoid too many API calls.
@@ -100,12 +98,12 @@ Output the final draft in a code block for easy copy-paste:
 03/05
 今日執行
 
-【模組A】Story名稱 - Task名稱
-【模組B】Story名稱 - Task名稱
+Story名稱 - Task名稱
+Story名稱 - Task名稱
 
 昨日完成
 
-【模組C】Story名稱 - Task名稱
+Story名稱 - Task名稱
 
 未完成
 

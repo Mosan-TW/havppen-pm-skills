@@ -23,7 +23,6 @@ allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notio
 | Tasks | — | `2d9268e74af88074ae62ddfa3090f7a1` |
 | Stories | `collection://2d9268e7-4af8-8166-8238-000bd8445fdb`（⚠️ 未共享） | `2d9268e74af88105a52ff323aed1cfcb` |
 | Bug | `collection://2e8268e7-4af8-80a5-ad02-000b7bce538d` | `2e8268e74af880a5ad02000b7bce538d` |
-| Modules | `collection://2e8268e7-4af8-803d-bb1b-000bbc327576` | `2e8268e74af8803dbb1b000bbc327576` |
 | Sprint | `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569` | `2d9268e74af880ac83b2000b6dcef569` |
 
 完整對照：`shared/notion-api-fallback.md`。如 REST 404，先確認 ID 來源是【倉庫】不是 view。
@@ -32,7 +31,7 @@ allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notio
 
 若 context 是「幫這個 Story 建 task」或「story task」類的指示，**必須建立以下 4 張卡，缺一不可**：
 
-> ⚠️ **卡片命名規則（Notion 自動化）**：Task link Story 後，自動化會把名稱改為 `[模組] Story名 - {卡名}`；link Bug 則改為 `{Bug名} - {卡名}`。因此卡名**只寫階段 / 動作本身**，不要重複 Story / Bug 名、不要加 `[階段]` 前綴，否則名稱重複。只有**未 link Story/Bug 的臨時卡**才寫完整描述。
+> ⚠️ **卡片命名規則（Notion 自動化）**：Task link Story 後，自動化會把名稱改為 `Story名 - {卡名}`；link Bug 則改為 `{Bug名} - {卡名}`。因此卡名**只寫階段 / 動作本身**，不要重複 Story / Bug 名、不要加 `[階段]` 前綴，否則名稱重複。只有**未 link Story/Bug 的臨時卡**才寫完整描述。
 
 | 卡片名稱 | 所屬階段 | 點數 | 特殊欄位要求 |
 |------|----------|------|-------------|
@@ -43,7 +42,7 @@ allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notio
 
 ### 建立流程
 
-1. **先問**：優先級（臨時 / 高 / 中 / 低）、模組（搜 Modules DB）
+1. **先問**：優先級（臨時 / 高 / 中 / 低）　※🚫 模組已廢除（2026-07-14），不要問、不要填
 2. **不要問點數**（除了開發卡）：更版固定 1，人工測試 / 驗收不壓
 3. **逐一建立 4 張卡**：確認後一次性建立，不要只建一張
 4. **建完更版卡後立刻填 Git Branch**（Step 4.5 之前）
@@ -58,11 +57,10 @@ allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notio
 Story Task 建立計畫：
   Story：<Story 名稱>
   優先級：高
-  模組：會員結帳
   執行者：Wayne
   Sprint：Sprint XX
 
-  4 張卡（卡名只寫階段，Notion 自動化會補 [模組] Story名 前綴）：
+  4 張卡（卡名只寫階段，Notion 自動化會補 Story名 前綴）：
   1. 開發 — 開發 / 點數：5
   2. 人工測試 — 人工測試 / 無點數 / 將貼 Gherkin
   3. 更版 — 更版 / 點數：1 / Git Branch：feat/xxx
@@ -86,7 +84,6 @@ From what the user described, determine:
 - **Status** (狀態🖍️) — 即將進行 / 進行中 / 已完成 (default: 即將進行)
 - **Assignee** (執行者們🖍️) — ask if not clear from context; use `notion-search` with `query_type: "user"` to resolve name to user ID
 - **Points** (點數🖍️) — 1 / 2 / 3 / 5 / 8 / 13 / 21 — ask if not clear
-- **Module** (模組🖍️) — search Modules DB to find matching module
 - **Sprint** (Sprint🖍️) — auto-detect current sprint from Sprint DB
 - **Story or Bug link** — if context mentions one, search and link it
 - **Completion date** (完成日期🖍️) — if status is 已完成, ask or infer
@@ -95,10 +92,9 @@ From what the user described, determine:
 
 Before confirming, resolve these automatically (in parallel):
 1. **Sprint**: Search Sprint DB for the sprint whose date range covers today (or the relevant date)
-2. **Module**: Search Modules DB by keyword from the task name/context
-3. **Story/Bug**: Search if context mentions a related story or bug
-4. **Assignee**: If name is mentioned, search for the Notion user ID
-5. **Git Branch**（所屬階段 = 更版 或 緊急更版 時必填）: 自動查找 feature branch
+2. **Story/Bug**: Search if context mentions a related story or bug
+3. **Assignee**: If name is mentioned, search for the Notion user ID
+4. **Git Branch**（所屬階段 = 更版 或 緊急更版 時必填）: 自動查找 feature branch
    - 先從對話 context 找 branch name
    - 找不到則查 worktree：`git -C ~/Projects/Havppen/havppen/newscms worktree list` 和 `git -C ~/Projects/Havppen/havppen/havppen-api-v1 worktree list`
    - 仍找不到則查最近有改動的遠端 branch：`git -C <repo> branch -r --sort=-committerdate | head -20`
@@ -115,7 +111,6 @@ Show a compact preview with ALL fields:
   狀態：進行中
   執行者：Wayne
   點數：3
-  模組：金流
   Sprint：Sprint 10 (2026-03-09)
   Bug：[kingway] 金流通知持續噴 403
   完成日期：—
@@ -212,7 +207,7 @@ After creating, fetch the created task and check these required fields:
 | 執行者們🖍️ | 永遠必填 |
 | 點數🖍️ | 永遠必填 |
 | Sprint🖍️ | 永遠必填 |
-| 模組🖍️ | 永遠必填 |
+| ~~模組🖍️~~ | 🚫 已廢除（2026-07-14），不填 |
 | Story🖍️ 或 Bug🖍️ | 至少填一個（臨時事項可例外） |
 | 完成日期🖍️ | 狀態 = 已完成 時必填 |
 | Git Branch🖍️ | 所屬階段 = 更版 或 緊急更版 時必填 |
@@ -227,7 +222,7 @@ Return the task URL when done.
 
 ## Naming conventions
 
-**有 link Story/Bug 的卡**：只寫動作 / 階段本身（自動化會補 `[模組] Story名 - ` 或 `{Bug名} - ` 前綴）：
+**有 link Story/Bug 的卡**：只寫動作 / 階段本身（自動化會補 `Story名 - ` 或 `{Bug名} - ` 前綴）：
 
 | Type | 卡名 |
 |------|------|

@@ -19,7 +19,6 @@ allowed-tools: mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notio
 - Tasks DB: `2d9268e74af88074ae62ddfa3090f7a1` (REST DB id；不可用 collection:// view UUID 餵 REST API，會 404)
 - Sprint DB: `collection://2d9268e7-4af8-80ac-83b2-000b6dcef569`
 - Stories DB: `collection://2d9268e7-4af8-8166-8238-000bd8445fdb`
-- Modules DB: `collection://2e8268e7-4af8-803d-bb1b-000bbc327576`
 
 ## Team Member IDs
 
@@ -87,7 +86,7 @@ Group tasks by business domain, NOT by phase. Merge related phases into one line
 **Merge rules:**
 - Same bug/feature across phases (緊急修復 + 緊急更版 + 驗收) → one line, sum points
 - Same feature (開發 + 更版) → one line, sum points
-- Match by similar title keywords（strip 自動化前綴 `[模組] Story名 - ` / `{Bug名} - `，以及歷史卡的 `[開發]`、`[更版]`、`[驗收]` 前綴）
+- Match by similar title keywords（strip 自動化前綴 `Story名 - ` / `{Bug名} - `，以及歷史卡的 `[開發]`、`[更版]`、`[驗收]` 前綴；2026-07-14 前的舊卡可能還有 `[模組] ` 前綴，一併 strip）
 
 **Functional area detection** (by keywords in title or module):
 - 兌換券 / 兌換 → 兌換券相關

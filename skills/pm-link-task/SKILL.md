@@ -19,7 +19,6 @@ allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notio
 - Tasks DB: `2d9268e74af88074ae62ddfa3090f7a1` (REST DB id；不可用 collection:// view UUID 餵 REST API，會 404)
 - Stories DB: `collection://2d9268e7-4af8-8166-8238-000bd8445fdb`
 - StoryGroup DB（原 Epics）: `2d9268e74af880d69225ee4bc7269453`（Group 為選填——只有多階段 feature 的 Story 才有 Group）
-- Modules: `collection://2e8268e7-4af8-803d-bb1b-000bbc327576`
 
 ## Your task
 
@@ -38,7 +37,7 @@ Based on the Task's name, module, and description:
 
 **If linking to existing Story:**
 - Update the Task's `Story🖍️` field to the chosen Story
-- Optionally update `模組🖍️` to match the Story's module
+> 🚫 **模組已廢除（2026-07-14）**：不要寫入 `模組🖍️`。
 
 **If creating new Story:**
 - Ask for Story name and module；Group 僅在多階段 feature（Story 名 `<Group名>｜第N階段`）才需要，預設不填

@@ -9,7 +9,8 @@ allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notio
 Fetch current sprint tasks assigned to the current user:
 - Tasks DB: `collection://2d9268e7-4af8-8003-8d86-000b45718394`
 - Filter: `相對 Sprint = 當期` AND `執行者們🖍️` includes current user
-- Fields to retrieve: `名稱🖍️`, `狀態🖍️`, `所屬階段🖍️`, `模組🖍️`, `Story🖍️`, `優先級🖍️`, `完成日期🖍️`
+- Fields to retrieve: `名稱🖍️`, `狀態🖍️`, `所屬階段🖍️`, `Story🖍️`, `優先級🖍️`, `完成日期🖍️`
+  （🚫 `模組🖍️` 已於 2026-07-14 廢除，不再讀取）
 
 Sprint is weekly. `相對 Sprint = 當期` = this week's sprint.
 
