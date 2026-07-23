@@ -307,11 +307,27 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 
 - [newscms #726](https://github.com/Mosan-TW/newscms/pull/726) — 前端修復
 - [havppen-api-v1 #123](https://github.com/Mosan-TW/havppen-api-v1/pull/123) — 後端修復（若有）
+
+## 發版廣播用資訊
+
+**使用者語言描述**：{同 名稱🖍️ 的非技術行為描述}
+**影響角色**：{站台管理員 / 內容編輯 / 終端會員 / 客服 / 內部營運，可多選}
+**客服話術**：
+Q: {預期客戶會問的問題}
+A: {建議回答}
+**已知限制 / Workaround**：{無 或 具體限制}
 ```
 
 - 每個 PR 一行，格式：`- [repo #號碼](URL) — 說明`
 - 只有一個 PR 時也要建此 section（方便日後補充）
 - 用 `gh pr list --head <branch>` 自動查，不需詢問用戶
+
+**「發版廣播用資訊」section 是為 `release-broadcast` skill 預先鋪的素材**——開卡當下就把它填好，發版時 release-broadcast 才不用回頭重問一次同樣的問題（強制思考清單的 Q2/Q3/Q4）：
+- **使用者語言描述**：直接複用 Step 1 已推導的 `名稱🖍️`，不用重寫
+- **影響角色**：依 bug 描述可推斷的角色直接填（例：後台功能 → 站台管理員；前台頁面 → 終端會員）；不確定就用 `AskUserQuestion` 跟其他欄位一併問，不要漏問
+- **客服話術**：能預期到客戶提問就先擬一版；真的無法預期（純內部 / 純技術修復）就填「無」
+- **已知限制 / Workaround**：多數 bug 填「無」；若修復有已知邊界（例如僅涵蓋特定情境）要寫清楚
+- 這些欄位不是必答題，但**必須出現在卡片上**（沒答案就填「無」或「待確認」），不能整個 section 漏掉
 
 **Git Branch / PR 自動查找流程（不需詢問用戶）：**
 1. 同時執行 `git branch -r --sort=-committerdate | head -30` 查詢 `newscms` 和 `havppen-api-v1` 的遠端 branches
@@ -404,9 +420,9 @@ Show the Bug page URL, all Task URLs, and worktree path in a summary table.
 ## Maintenance
 
 This skill is managed in the `havppen-pm-skills` repo (`~/Projects/Havppen/havppen-pm-skills`).
-After editing `~/.claude/skills/pm-bug/SKILL.md`, sync back:
+**唯一來源是 `~/Projects/Havppen/havppen/havppen-spec/.claude/skills/pm-bug/SKILL.md`**（pm-* 系列**不在** `~/.claude/skills/`，別往那裡找）。改完後同步回 pm-skills repo：
 
 ```bash
-cp ~/.claude/skills/pm-bug/SKILL.md ~/Projects/Havppen/havppen-pm-skills/skills/pm-bug/SKILL.md
+cp ~/Projects/Havppen/havppen/havppen-spec/.claude/skills/pm-bug/SKILL.md ~/Projects/Havppen/havppen-pm-skills/skills/pm-bug/SKILL.md
 cd ~/Projects/Havppen/havppen-pm-skills && git add skills/pm-bug/SKILL.md && git commit -m "..." && git push
 ```
