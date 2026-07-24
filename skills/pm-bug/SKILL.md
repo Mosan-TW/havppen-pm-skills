@@ -291,6 +291,16 @@ Based on fix type, create a **pipeline of Tasks** with sequential dependencies (
 - `依賴 Task🖍️` — previous Task in the pipeline (except the first Task)
 - `執行者們🖍️` — assignee (from Step 1)
 - `Sprint🖍️` — sprint (from Step 1)
+- `優先級🖍️` — hotfix pipeline 全部填 `臨時`；full-fix pipeline 全部填 `高`（同 fix type 判斷，見上方表格；⚠️ 每張 Task 都要填，不是只填第一張）
+- `點數🖍️`（story point，select：0/1/2/3/5/8/13/21）— 每張 Task 都要填，依複雜度估：
+  | Task | 預設點數 | 調整依據 |
+  |------|---------|---------|
+  | 開發 / 緊急修復 | 2–8 | 單一簡單查詢/條件修正 → 2；跨多個 service/多檔案 sweep → 5；牽涉多個 use case + 新錯誤碼 + 完整測試覆蓋 → 8 |
+  | 人工測試 | 1–3 | 單一場景 → 1；多場景/跨角色 → 2–3 |
+  | 更版 / 緊急更版 | 1 | 固定 |
+  | 驗收 | 1–2 | 同人工測試複雜度 |
+
+⚠️ **上面兩個欄位最容易漏**：`優先級🖍️` 雖然在 fix type 表格中決定了值，但建 Task payload 時常忘記重複帶入每一張卡；`點數🖍️` 沒有自動推導來源，必須每張手動估。建立 Task 後，連同 Step「Field validation after creation」一併檢查這兩欄，不要事後才用 `notion-update-page` 補。
 
 **`Git Branch / PR🖍️` 規則（更版類 Task 專用）：**
 - `更版` 和 `緊急更版` Task 必須填入 `Git Branch / PR🖍️`（注意：Notion Tasks DB 的正確欄位名稱是 `Git Branch / PR🖍️`，不是 `Git Branch🖍️`）
@@ -355,6 +365,8 @@ A: {建議回答}
 - `Bug🖍️` — linked to the Bug page
 - `執行者們🖍️` — assignee
 - `Sprint🖍️` — sprint
+- `優先級🖍️` — 每張都要有值（不是只有第一張）
+- `點數🖍️` — 每張都要有值
 
 If any relation failed silently during creation (Notion API may reject relation values without raising an obvious error), use `notion-update-page` to retry. **Important:** Always pass the full Notion URL format (`https://www.notion.so/<id>`) for relation properties — raw UUIDs cause `"is not a valid URL"` validation errors.
 
