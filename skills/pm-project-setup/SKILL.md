@@ -5,13 +5,6 @@ model: haiku
 allowed-tools: mcp__plugin_Notion_notion__notion-fetch, mcp__plugin_Notion_notion__notion-create-pages, mcp__plugin_Notion_notion__notion-update-page, mcp__plugin_Notion_notion__notion-update-data-source, mcp__claude_ai_Notion__notion-fetch, mcp__claude_ai_Notion__notion-search, mcp__claude_ai_Notion__notion-create-pages, mcp__claude_ai_Notion__notion-update-page, AskUserQuestion, Bash
 ---
 
-<!-- HAIKU-DELEGATE-MARKER -->
-> **執行模型：Haiku（省用量）**
-> 本 skill 為機械型流程（Notion CRUD + 格式化），不需深推理。
-> 若你目前**不是** Haiku，請改用 Agent tool 派一個 `model: haiku` 的 sub-agent，
-> prompt 指示它「呼叫本 skill 並完成全部步驟」，主 session 不要親自跑。
-> 例外：流程中出現需判斷／取捨的 edge case，sub-agent 應回報主 session 交高階模型決定。
-
 > **Notion MCP Fallback**: MCP 回 500 時，讀 `shared/notion-api-fallback.md` 切換到 Bash + REST API。
 
 ## Known Team Members
@@ -145,8 +138,9 @@ Phases are pre-filled based on flow type — no need to ask unless the user want
 **Step 2: Create Story**
 
 > ⚠️ **寫內文前必讀 `shared/notion-card-writing-style.md`**（單一事實來源）。
-> Story 卡是給 PM / QA 看的，**內文一律白話**：禁檔案路徑、行號、程式碼片段、變數 / DTO / 資料表 / 端點名稱、框架術語堆疊（GQL / REST / client-side / adapter / view…）。技術細節留 `features/<slug>/context.md` 與 openspec change，內文最後用一句話指路過去即可。
-> Story 段落結構（客戶要什麼 / 現在的狀況 / 規劃時查到的事 / 決定怎麼做 / 要避開的坑 / 影響範圍 / 需要注意 / 詳細規格）與改寫對照範例見該檔。
+> Story 卡是給 PM / QA 看的，**主文一律白話**：禁檔案路徑、行號、程式碼片段、變數 / DTO / 資料表 / 端點名稱、框架術語堆疊（GQL / REST / client-side / adapter / view…）。
+> **卡片結構 = 白話主文先完整寫一遍 → divider → 底部「規則細節（完整版）」章節用較技術語言把定案規則再寫一遍**。禁止用「詳見 havppen-spec / context.md」指路句替代內容——讀卡的人不會去 spec repo（2026-08-06 定案）。實作層細節（檔案路徑、程式碼）仍留 `features/<slug>/context.md` 與 openspec change。
+> Story 段落結構（客戶要什麼 / 現在的狀況 / 規劃時查到的事 / 決定怎麼做 / 要避開的坑 / 影響範圍 / 需要注意 / 規則細節）與改寫對照範例見該檔。
 > **判準**：把卡片拿給不寫 code 的同事看，他能不能講出「這張卡在做什麼、為什麼要做、做完會怎樣」。不能就是還不夠白話。
 
 Create a new page in the Stories database with:
