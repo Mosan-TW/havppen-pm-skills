@@ -1,3 +1,13 @@
+> ## ⚠️ 此 repo 已於 2026-08-25 廢棄（DEPRECATED）
+>
+> 唯一來源改為 **`havppen-spec/.claude/skills/pm-*/SKILL.md`**。
+>
+> 廢棄原因：實際上只有 WenHong 一人使用，靠手動 `cp` 同步的雙份機制長期漂移
+> （廢棄當下 12 支中有 8 支不同步、1 支從未推送）。維持兩份的成本高於價值。
+>
+> **不要再從這裡安裝或編輯**。此 repo 內容停留在 2026-08-12，已過期。
+> 若未來團隊真的要共用，重開一個以 spec repo 為 upstream 的自動同步機制，不要復活 `install.sh`。
+
 # Havppen PM Skills
 
 給 Havppen 團隊用的 Claude Code Skills，涵蓋 PM、開發者、QA 的日常工作流程，整合 Notion 與 Sentry。
